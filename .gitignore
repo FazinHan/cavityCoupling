@@ -11,6 +11,9 @@ data/old/
 references/
 tutorials/
 
+# job scehduler
+starter.sh
+
 # C extensions
 *.so
 
