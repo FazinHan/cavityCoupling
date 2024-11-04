@@ -1,8 +1,10 @@
 using QuantumCumulants
 using OrdinaryDiffEq, ModelingToolkit
+using Optim
 using DifferentialEquations
 using PyPlot
 using NPZ
+using DelimitedFiles
 using MPI
 import LinearAlgebra as la
 # Define parameters
@@ -37,7 +39,6 @@ A = calculate_jacobian(sys); B=[eqs_completed[1].rhs.dict[Ω1] * Ω1; eqs_comple
 Ainv=inv(A); X=Ainv*B; b1=X[1]; b2=X[2]; b3=X[3];
 
 function main(type)
-    using DelimitedFiles
 
 type = "strong"
 root = "C:\\Users\\freak\\OneDrive\\Documents\\core\\Projects\\cavityCoupling\\data"
@@ -139,7 +140,6 @@ end
 
 occupationList = main_calc_real_part_opt(Hlist,g1n,g2n)
 
-using PyPlot
 plot(Hlist,occupationList[:,1],"r");
 plot(Hlist,occupationList[:,2],"g");
 # plot(Hlist,occupationList[:,3],"b");
@@ -148,7 +148,6 @@ xlabel("Magnetic Field (Oe)"); ylabel("Frequency (GHz)")
 
 # ylim(2.5e10, 4e10)
 root = "C:\\Users\\freak\\OneDrive\\Documents\\core\\Projects\\cavityCoupling\\results"
-using Optim
 
 function inter(Hlist, params)
     theoretical_values = main_calc_real_part_opt(Hlist, params...)
@@ -190,7 +189,6 @@ println("Optimized parameters: ", optimized_params)
 
 occupationList = main_calc_real_part_full(Hlist,optimized_params...)
 
-using PyPlot
 pcolormesh(Hlist, frequencies, s21, cmap=:jet)
 plot(Hlist,occupationList[:,1],"k");plot(Hlist,occupationList[:,2],"k");plot(Hlist,occupationList[:,3],"k");
 # plot(Hlist, locs[:,1], "bo", markersize=.7);plot(Hlist, locs[:,2], "bo", markersize=.7);
