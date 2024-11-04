@@ -41,7 +41,7 @@ Ainv=inv(A); X=Ainv*B; b1=X[1]; b2=X[2]; b3=X[3];
 function main(type)
 
 type = "strong"
-root = "C:\\Users\\freak\\OneDrive\\Documents\\core\\Projects\\cavityCoupling\\data"
+root = "data"
 # Read the CSV file into a DataFrame
 # file_path = joinpath(root,"strong_peaks_widths.csv")
 file_path = joinpath(root, "$type"*"_peaks_widths.csv")
