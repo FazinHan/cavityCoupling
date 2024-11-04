@@ -198,7 +198,7 @@ xlabel("Magnetic Field (Oe)"); ylabel("Frequency (GHz)")
 
 # xlim(0.720, 0.920)
 # xlim(0, 35.920)
-title(string("Optimized Parameters: ", optimized_params))
+title(string("\$g_1\$=", round(optimized_params[1], digits=3), "; \$g_2\$=", round(optimized_params[2], digits=3)))
 ylim(2.75e10, 3.95e10)
 root = "C:\\Users\\freak\\OneDrive\\Documents\\core\\Projects\\cavityCoupling\\results\\fitted";
 savefig(joinpath(root,"$type.png"))
