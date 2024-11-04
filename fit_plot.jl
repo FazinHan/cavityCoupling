@@ -3,6 +3,7 @@ using OrdinaryDiffEq, ModelingToolkit
 using DifferentialEquations
 using PyPlot
 using NPZ
+using MPI
 import LinearAlgebra as la
 # Define parameters
 multiplier = 1e9
@@ -11,6 +12,10 @@ M_3 = 1750
 # M_3 = 0.175
 y1 = 2*pi*2.94e-3*multiplier
 y3 = 1.76e-2*multiplier
+
+MPI.Init()
+comm = MPI.COMM_WORLD
+rank = MPI.Comm_rank(comm)
 
 @cnumbers ω1 ω2 ω3 g1 g2 γ1 γ2 γ3 Ω1 Ω2 Ω3  # 2-magnon, 2-photon
 h1 = FockSpace(:cavity);h2 = FockSpace(:cavity);h3 = FockSpace(:cavity)
@@ -202,6 +207,4 @@ end
 
 types = ["strong","strong20","strong25","strong50","weak","strong2"]
 
-for type in types
-    main(type)
-end
+main(types[rank+1])
