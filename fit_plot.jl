@@ -5,7 +5,8 @@ using DifferentialEquations
 using PyPlot
 using NPZ
 using DelimitedFiles
-using MPI
+using BeepBeep
+# using MPI
 import LinearAlgebra as la
 # Define parameters
 multiplier = 1e9
@@ -15,9 +16,9 @@ M_3 = 1750
 y1 = 2*pi*2.94e-3*multiplier
 y3 = 1.76e-2*multiplier
 
-MPI.Init()
-comm = MPI.COMM_WORLD
-rank = MPI.Comm_rank(comm)
+# MPI.Init()
+# comm = MPI.COMM_WORLD
+# rank = MPI.Comm_rank(comm)
 
 @cnumbers ω1 ω2 ω3 g1 g2 γ1 γ2 γ3 Ω1 Ω2 Ω3  # 2-magnon, 2-photon
 h1 = FockSpace(:cavity);h2 = FockSpace(:cavity);h3 = FockSpace(:cavity)
@@ -40,7 +41,7 @@ Ainv=inv(A); X=Ainv*B; b1=X[1]; b2=X[2]; b3=X[3];
 
 function main(type)
 
-type = "strong"
+# type = "strong"
 root = "data"
 # Read the CSV file into a DataFrame
 # file_path = joinpath(root,"strong_peaks_widths.csv")
@@ -55,16 +56,16 @@ s21 = full_data[2:end,2:end];
 locs = df[:,1:2] * 2e9 * pi;
 locs = sort(locs, dims=2)
 Hlist = full_data[1,2:end];
-println(size(Hlist))
-println(size(locs))
-plot(Hlist, locs[:,1], "bo", markersize=.5);plot(Hlist, locs[:,2], "ro", markersize=.5);
-xlabel("Magnetic Field (Oe)"); ylabel("Frequency (GHz)");
+# println(size(Hlist))
+# println(size(locs))
+# plot(Hlist, locs[:,1], "bo", markersize=.5);plot(Hlist, locs[:,2], "ro", markersize=.5);
+# xlabel("Magnetic Field (Oe)"); ylabel("Frequency (GHz)");
 #Numerical calculations of dispersion spectra for case-1 (J > Γ)
 
 γ1n=0.1; γ2n=0.00469; γ3n=1.4e-4;
 g1n=.1;
 g2n=.1;
-ω2n = 3.17 * 1e10;
+ω2n = 3.32 * 1e10;
 ω3n = H -> y3 * (H*(H+M_3))^.5
 ω1n = H -> y1 * (H*(H+M_1))^.5
 # len = size(Hlist_o)[1]
@@ -140,10 +141,10 @@ end
 
 occupationList = main_calc_real_part_opt(Hlist,g1n,g2n)
 
-plot(Hlist,occupationList[:,1],"r");
-plot(Hlist,occupationList[:,2],"g");
+# plot(Hlist,occupationList[:,1],"r");
+# plot(Hlist,occupationList[:,2],"g");
 # plot(Hlist,occupationList[:,3],"b");
-plot(Hlist, locs[:,1], "bo", markersize=.5);plot(Hlist, locs[:,2], "ro", markersize=.5);
+# plot(Hlist, locs[:,1], "bo", markersize=.5);plot(Hlist, locs[:,2], "ro", markersize=.5);
 xlabel("Magnetic Field (Oe)"); ylabel("Frequency (GHz)")
 
 # ylim(2.5e10, 4e10)
@@ -200,9 +201,16 @@ title(string("\$g_1\$=", round(optimized_params[1], digits=3), "; \$g_2\$=", rou
 ylim(2.75e10, 3.95e10)
 root = "C:\\Users\\freak\\OneDrive\\Documents\\core\\Projects\\cavityCoupling\\results\\fitted";
 savefig(joinpath(root,"$type.png"))
+clf()
 println("Saved figure to $type.png")
 end
 
-types = ["strong","strong20","strong25","strong50","weak","strong2"]
+# types = ["strong20","strong25","strong50","strong2"]
+# types = ["strong50","strong2","strong25"]
+types = ["strong50","weak"]
 
-main(types[rank+1])
+for type in types
+    main(type)
+end
+
+beep(4)

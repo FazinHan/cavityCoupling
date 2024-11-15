@@ -1,5 +1,5 @@
-filename = 'data\py.csv'; % change this for other configurations
-output_file = 'data\py_peaks_widths.csv';
+filename = 'data\strong65.csv'; % change this for other configurations
+output_file = 'data\strong65_peaks_widths.csv';
 
 function fit_params_matrix = peak_aware_fitter3(filename, output_file)
 

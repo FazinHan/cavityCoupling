@@ -2,6 +2,7 @@ import numpy as np
 import re
 import matplotlib.pyplot as plt
 import os, sys
+from statsmodels.nonparametric.smoothers_lowess import lowess
 
 file_path = sys.argv[1]
 # file_path = os.path.join('data','raw',file_name)
@@ -82,6 +83,7 @@ def extract_data(file_path):
 
         # Add the last block of S21 data
         if current_s21:
+            # s21.append(smoothed_s21)
             s21.append(current_s21)
 
     # Final processing
@@ -105,8 +107,9 @@ if __name__=="__main__":
     name = os.path.basename(file_path).split('.')[0]
     # file_path = f'{name}.png'  # Replace with your actual file path
     frequency, H_params, s21 = extract_data(file_path)
-    H_params, s21 = sorter(H_params, s21)
+    # Apply LOWESS smoothing to each column of s21
     frequency = frequency[:s21.shape[0]] # Trim the frequency array to match the S21 data
+    # H_params, s21 = sorter(H_params, s21)
     params = read_parameters(file_path)
 
     # print("Frequency:", frequency)
@@ -119,7 +122,7 @@ if __name__=="__main__":
     plt.title(f'|$S_{{21}}$| for {name}')
     plt.xlabel('Hdc (Oe)')
     plt.ylabel('Frequency (GHz)')
-    # plt.ylim(4.3,6.3)
+    plt.ylim(4.3,6.3)
     plt.tight_layout()
     plt.savefig(os.path.join('results',f'{name}.png'))
     # plt.show()
