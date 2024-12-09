@@ -12,7 +12,7 @@ references/
 tutorials/
 
 # job scehduler
-starter.sh
+# starter.sh
 
 # C extensions
 *.so

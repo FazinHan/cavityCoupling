@@ -1,5 +1,79 @@
-filename = 'data\strong65.csv'; % change this for other configurations
-output_file = 'data\strong65_peaks_widths.csv';
+function s21_optimiser(arg)
+    filename = sprintf('data\\yig_t_sweep_outputs\\%s.csv',arg); % change this for other configurations
+    output_file = sprintf('data\\yig_t_sweep_outputs\\peaks_widths\\%s_peaks_widths.csv',arg);
+
+
+    peak_aware_fitter3(filename, output_file);
+
+    % observed_data = readmatrix('data\peaks_widths.csv');
+
+    % full_data = readmatrix(filename);
+
+    % frequencies = full_data(1:end,1) .* 2e9 * pi;
+
+    % s21_full = full_data(1:end,2:end);
+
+    % num_data = size(s21_full,2); 
+
+    % locs = observed_data(:,1:3) .* 2e9 * pi;
+
+    % sorted_omega = sort(locs,2);
+
+    % magnetic_field_values = full_data(1,1:end);
+    % 
+    % function score = inter(b, sorted_omega, num_data, magnetic_field_values)
+    % 
+    %     theo = load('real_part.mat');
+    %     oc1 = theo.oc1; % smallest
+    %     oc2 = theo.oc2;
+    %     oc3 = theo.oc3; % greatest
+    % 
+    %     % disp(size(sorted_omega));
+    %     % disp(size(theo));
+    % 
+    %     score = 0;
+    % 
+    %     for i=1:num_data
+    %         if abs(abs(sorted_omega(i,1)-sorted_omega(i,2))-sorted_omega(i,2))<1
+    %             one = (sorted_omega(i,1) - oc1(i)).^2;
+    %             two = (sorted_omega(i,1) - oc2(i)).^2;
+    %             three = (sorted_omega(i,1) - oc3(i)).^2;
+    %             score = score + min(one,two,three);
+    %         else    
+    %             score1 = (oc3(i) - sorted_omega(i,1)).^2;
+    %             score2 = (oc2(i) - sorted_omega(i,2)).^2;
+    %             score3 = (oc1(i) - sorted_omega(i,3)).^2;
+    % 
+    %             score = score1 + score2 + score3;
+    %         end
+    %     end
+    % 
+    %     % score = abs(score);
+    % 
+    % end
+
+    % objective = @(b)inter(b,sorted_omega*1e-10,num_data,magnetic_field_values);
+    % 
+    % options = optimset('Display','iter');
+    % 
+    % b = fminbnd(objective,0,1,options);
+    % 
+    % % disp(b);
+    % 
+    % theo = theoretical_s21(b);
+    % 
+    % figure;
+    % plot(magnetic_field_values,real(theo(:,1)),'black');
+    % hold on;
+    % plot(magnetic_field_values,real(theo(:,2)),'black');
+    % hold on;
+    % plot(magnetic_field_values,locs(:,1),'bo');
+    % hold on;
+    % plot(magnetic_field_values,locs(:,2),'bo');
+    % axis([1075 1375 3.225e10 3.5e10]);
+
+    % disp(objective(0.0047, sorted_omega));
+end
 
 function fit_params_matrix = peak_aware_fitter3(filename, output_file)
 
@@ -96,74 +170,3 @@ function A = theoretical_s21(b, H)
     % plotting imaginary part
     % plot(H*10000,-imag(A(:,1))/2/pi,'LineWidth',3,'Color','black');hold on;plot(H*10000,-imag(A(:,2)/2/pi),'LineWidth',3,'Color','black');hold off;
 end
-
-peak_aware_fitter3(filename, output_file);
-
-% observed_data = readmatrix('data\peaks_widths.csv');
-
-% full_data = readmatrix(filename);
-
-% frequencies = full_data(1:end,1) .* 2e9 * pi;
-
-% s21_full = full_data(1:end,2:end);
-
-% num_data = size(s21_full,2); 
-
-% locs = observed_data(:,1:3) .* 2e9 * pi;
-
-% sorted_omega = sort(locs,2);
-
-% magnetic_field_values = full_data(1,1:end);
-% 
-% function score = inter(b, sorted_omega, num_data, magnetic_field_values)
-% 
-%     theo = load('real_part.mat');
-%     oc1 = theo.oc1; % smallest
-%     oc2 = theo.oc2;
-%     oc3 = theo.oc3; % greatest
-% 
-%     % disp(size(sorted_omega));
-%     % disp(size(theo));
-% 
-%     score = 0;
-% 
-%     for i=1:num_data
-%         if abs(abs(sorted_omega(i,1)-sorted_omega(i,2))-sorted_omega(i,2))<1
-%             one = (sorted_omega(i,1) - oc1(i)).^2;
-%             two = (sorted_omega(i,1) - oc2(i)).^2;
-%             three = (sorted_omega(i,1) - oc3(i)).^2;
-%             score = score + min(one,two,three);
-%         else    
-%             score1 = (oc3(i) - sorted_omega(i,1)).^2;
-%             score2 = (oc2(i) - sorted_omega(i,2)).^2;
-%             score3 = (oc1(i) - sorted_omega(i,3)).^2;
-% 
-%             score = score1 + score2 + score3;
-%         end
-%     end
-% 
-%     % score = abs(score);
-% 
-% end
-
-% objective = @(b)inter(b,sorted_omega*1e-10,num_data,magnetic_field_values);
-% 
-% options = optimset('Display','iter');
-% 
-% b = fminbnd(objective,0,1,options);
-% 
-% % disp(b);
-% 
-% theo = theoretical_s21(b);
-% 
-% figure;
-% plot(magnetic_field_values,real(theo(:,1)),'black');
-% hold on;
-% plot(magnetic_field_values,real(theo(:,2)),'black');
-% hold on;
-% plot(magnetic_field_values,locs(:,1),'bo');
-% hold on;
-% plot(magnetic_field_values,locs(:,2),'bo');
-% axis([1075 1375 3.225e10 3.5e10]);
-
-% disp(objective(0.0047, sorted_omega));

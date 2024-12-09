@@ -5,8 +5,7 @@ using DifferentialEquations
 using PyPlot
 using NPZ
 using DelimitedFiles
-using BeepBeep
-# using MPI
+using MPI
 import LinearAlgebra as la
 # Define parameters
 multiplier = 1e9
@@ -16,9 +15,9 @@ M_3 = 1750
 y1 = 2*pi*2.94e-3*multiplier
 y3 = 1.76e-2*multiplier
 
-# MPI.Init()
-# comm = MPI.COMM_WORLD
-# rank = MPI.Comm_rank(comm)
+MPI.Init()
+comm = MPI.COMM_WORLD
+rank = MPI.Comm_rank(comm)
 
 @cnumbers ω1 ω2 ω3 g1 g2 γ1 γ2 γ3 Ω1 Ω2 Ω3  # 2-magnon, 2-photon
 h1 = FockSpace(:cavity);h2 = FockSpace(:cavity);h3 = FockSpace(:cavity)
@@ -42,10 +41,10 @@ Ainv=inv(A); X=Ainv*B; b1=X[1]; b2=X[2]; b3=X[3];
 function main(type)
 
 # type = "strong"
-root = "data"
+root = joinpath(pwd(),"data","yig_t_sweep_outputs")
 # Read the CSV file into a DataFrame
 # file_path = joinpath(root,"strong_peaks_widths.csv")
-file_path = joinpath(root, "$type"*"_peaks_widths.csv")
+file_path = joinpath(root, "peaks_widths", "$type"*"_peaks_widths.csv")
 file_path_full = joinpath(root,"$type.csv")
 df = readdlm(file_path, ',', Float64, '\n',skipstart=1)
 full_data = readdlm(file_path_full,',',Float64,'\n')
@@ -148,7 +147,7 @@ occupationList = main_calc_real_part_opt(Hlist,g1n,g2n)
 xlabel("Magnetic Field (Oe)"); ylabel("Frequency (GHz)")
 
 # ylim(2.5e10, 4e10)
-root = "C:\\Users\\freak\\OneDrive\\Documents\\core\\Projects\\cavityCoupling\\results"
+root = joinpath(pwd(),"results")
 
 function inter(Hlist, params)
     theoretical_values = main_calc_real_part_opt(Hlist, params...)
@@ -199,18 +198,17 @@ xlabel("Magnetic Field (Oe)"); ylabel("Frequency (GHz)")
 # xlim(0, 35.920)
 title(string("\$g_1\$=", round(optimized_params[1], digits=3), "; \$g_2\$=", round(optimized_params[2], digits=3)))
 ylim(2.75e10, 3.95e10)
-root = "C:\\Users\\freak\\OneDrive\\Documents\\core\\Projects\\cavityCoupling\\results\\fitted";
-savefig(joinpath(root,"$type.png"))
+savefig(joinpath(root,"fitted","$type.png"))
 clf()
 println("Saved figure to $type.png")
 end
 
 # types = ["strong20","strong25","strong50","strong2"]
 # types = ["strong50","strong2","strong25"]
-types = ["strong50","weak"]
+types = ["yig_t_0.02", "yig_t_0.033333333333333", "yig_t_0.046666666666667", "yig_t_0.06", "yig_t_0.073333333333333", "yig_t_0.086666666666667", "yig_t_0.1"]
 
-for type in types
-    main(type)
-end
+# for type in types
+#     main(type)
+# end
 
-beep(4)
+main(types[rank+1])
