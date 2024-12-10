@@ -90,7 +90,7 @@ function fit_params_matrix = peak_aware_fitter3(filename, output_file)
 
     for col=1:num_data
         smoothed_data = smooth(s21_full(:,col),.01, 'lowess');
-        [pks, locs, widths, prominence] = findpeaks(-1*smoothed_data, frequencies,'MinPeakProminence',0.4,'MinPeakDistance',.1,'SortStr','descend','NPeaks',2);
+        [pks, locs, widths, prominence] = findpeaks(-1*smoothed_data, frequencies,'MinPeakProminence',0.45,'MinPeakDistance',.1,'SortStr','descend','NPeaks',2);
         fit_params_matrix(1:2,col) = locs;
         fit_params_matrix(3:4,col) = widths;
     end

@@ -6,6 +6,7 @@ using PyPlot
 using NPZ
 using DelimitedFiles
 using MPI
+using BeepBeep
 import LinearAlgebra as la
 # Define parameters
 multiplier = 1e9
@@ -62,7 +63,7 @@ Hlist = full_data[1,2:end];
 #Numerical calculations of dispersion spectra for case-1 (J > Γ)
 
 γ1n=0.1; γ2n=0.00469; γ3n=1.4e-4;
-g1n=.1;
+g1n=2;
 g2n=.1;
 ω2n = 3.2 * 1e10;
 ω3n = H -> y3 * (H*(H+M_3))^.5
@@ -138,13 +139,13 @@ function main_calc_real_part_full(Hlist,g1n,g2n)
     return occupationList
 end
 
-occupationList = main_calc_real_part_opt(Hlist,g1n,g2n)
+# occupationList = main_calc_real_part_opt(Hlist,g1n,g2n)
 
 # plot(Hlist,occupationList[:,1],"r");
 # plot(Hlist,occupationList[:,2],"g");
 # plot(Hlist,occupationList[:,3],"b");
 # plot(Hlist, locs[:,1], "bo", markersize=.5);plot(Hlist, locs[:,2], "ro", markersize=.5);
-xlabel("Magnetic Field (Oe)"); ylabel("Frequency (GHz)")
+# xlabel("Magnetic Field (Oe)"); ylabel("Frequency (GHz)")
 
 # ylim(2.5e10, 4e10)
 root = joinpath(pwd(),"results")
@@ -179,8 +180,8 @@ objective(params) = inter(Hlist, params)
 
 # # Perform the optimization
 lower = [0, 0]
-upper = [1, 1]
-inner_optimizer = BFGS()
+upper = [5, 5]
+inner_optimizer = ConjugateGradient()
 result = optimize(objective,lower,upper,initial_params,Fminbox(inner_optimizer))
 # # Extract optimized parameters
 optimized_params = Optim.minimizer(result)
@@ -211,4 +212,5 @@ types = ["yig_t_0.02", "yig_t_0.033333333333333", "yig_t_0.046666666666667", "yi
 #     main(type)
 # end
 
-main(types[rank+1])
+main(types[1])
+beep(4)
