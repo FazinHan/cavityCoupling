@@ -63,7 +63,7 @@ Hlist = full_data[1,2:end];
 #Numerical calculations of dispersion spectra for case-1 (J > Γ)
 
 γ1n=0.1; γ2n=0.00469; γ3n=1.4e-4;
-g1n=2;
+g1n=.8;
 g2n=.1;
 ω2n = 3.2 * 1e10;
 ω3n = H -> y3 * (H*(H+M_3))^.5
@@ -180,7 +180,7 @@ objective(params) = inter(Hlist, params)
 
 # # Perform the optimization
 lower = [0, 0]
-upper = [5, 5]
+upper = [1, 1]
 inner_optimizer = ConjugateGradient()
 result = optimize(objective,lower,upper,initial_params,Fminbox(inner_optimizer))
 # # Extract optimized parameters
