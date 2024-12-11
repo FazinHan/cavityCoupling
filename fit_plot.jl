@@ -212,5 +212,5 @@ types = ["yig_t_0.02", "yig_t_0.033333333333333", "yig_t_0.046666666666667", "yi
 #     main(type)
 # end
 
-main(types[1])
+main(types[rank+1])
 beep(4)

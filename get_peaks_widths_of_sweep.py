@@ -15,7 +15,7 @@ directory = os.path.join(cwd, 'data', 'yig_t_sweep_outputs')
 filenames = [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))]
 data_files = [i.strip('.csv') for i in filenames]
 
-print(data_files)
+# print(data_files)
 
 os.makedirs(os.path.join(directory,'peaks_widths'), exist_ok=True)
 
