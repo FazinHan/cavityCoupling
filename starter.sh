@@ -7,6 +7,4 @@
 #SBATCH -A physics_engg
 #SBATCH --mail-user=fizaan.khan.phy21@iitbhu.ac.in
 
-source ~/.bashrc
-
 time mpiexec -n $SLURM_NTASKS /scratch/fizaank.phy21.iitbhu/julia-1.11.2/bin/julia fit_plot.jl

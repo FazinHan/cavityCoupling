@@ -6,7 +6,7 @@ using PyPlot
 using NPZ
 using DelimitedFiles
 using MPI
-using BeepBeep
+# using BeepBeep
 import LinearAlgebra as la
 # Define parameters
 multiplier = 1e9
@@ -213,4 +213,4 @@ types = ["yig_t_0.02", "yig_t_0.033333333333333", "yig_t_0.046666666666667", "yi
 # end
 
 main(types[rank+1])
-beep(4)
+# beep(4)
