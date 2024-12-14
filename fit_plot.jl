@@ -181,7 +181,7 @@ objective(params) = inter(Hlist, params)
 # # Perform the optimization
 lower = [0, 0]
 upper = [1, 1]
-inner_optimizer = ConjugateGradient()
+inner_optimizer = BFGS()
 result = optimize(objective,lower,upper,initial_params,Fminbox(inner_optimizer))
 # # Extract optimized parameters
 optimized_params = Optim.minimizer(result)
