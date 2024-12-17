@@ -179,3 +179,4 @@ nohup.out
 *.out
 
 watcher
+local_fit_plot.jl

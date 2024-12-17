@@ -213,4 +213,21 @@ types = ["yig_t_0.02", "yig_t_0.033333333333333", "yig_t_0.046666666666667", "yi
 # end
 
 main(types[rank+1])
+
+if rank != 0
+    MPI.Bcast!(optimized_params, 0, comm)
+else
+    g1_g2_data = [optimized_params[1], optimized_params[2]]
+    for i in 1:(MPI.Comm_size(comm) - 1)
+        recv_data = MPI.Bcast!(zeros(2), i, comm)
+        append!(g1_g2_data, recv_data)
+    end
+    open("g1_g2.txt", "a") do io
+        for i in 1:2:length(g1_g2_data)
+            println(io, "$(g1_g2_data[i]), $(g1_g2_data[i+1])")
+        end
+    end
+end
+
+MPI.Finalize()
 # beep(4)

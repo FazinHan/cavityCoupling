@@ -56,7 +56,7 @@ if current_params and current_data:
 output_paths = []
 for yig_t, data_list in datasets.items():
     combined_df = pd.concat(data_list, ignore_index=True)
-    output_dir = "data\\yig_t_sweep_outputs\\intermediaries"
+    output_dir = "data\\yig_t_sweep_outputs\\intermediaries" # creating intermediary folder due to format of storage here not being a 2x2 array
     os.makedirs(output_dir, exist_ok=True)
     output_path = f"{output_dir}\\yig_t_{yig_t}.csv"
     combined_df.to_csv(output_path, index=False)
