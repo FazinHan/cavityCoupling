@@ -16,7 +16,7 @@ for file in csv_files:
     yig_t_value = file.split('_')[-1].replace('.csv', '')
 
     # Pivot the data to create a grid for plotting
-    pivot_table = data.pivot_table(values='S21', index='Frequency', columns='Hdc', aggfunc='mean')
+    pivot_table = data.pivot_table(values='S21', index='Frequency', columns='Hdc', dropna=False)
 
     # Calculate the mean and standard deviation of the data
     mean_value = np.mean(pivot_table.values)
@@ -55,3 +55,4 @@ for file in csv_files:
     plt.tight_layout()
     os.makedirs("results\\yig_t_sweep_plots", exist_ok=True)
     plt.savefig(f"results\\yig_t_sweep_plots\\yig_t_sweep_plot_{int(float(yig_t_value)*1e3)}um.png")
+    print(f"Plot saved for yig_t={yig_t_value}mm")
