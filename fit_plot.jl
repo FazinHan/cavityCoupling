@@ -16,6 +16,8 @@ M_3 = 1750
 y1 = 2*pi*2.94e-3*multiplier
 y3 = 1.76e-2*multiplier
 
+optimized_params = [0.0, 0.0]
+
 MPI.Init()
 comm = MPI.COMM_WORLD
 rank = MPI.Comm_rank(comm)
@@ -184,7 +186,11 @@ upper = [1, 1]
 inner_optimizer = BFGS()
 result = optimize(objective,lower,upper,initial_params,Fminbox(inner_optimizer))
 # # Extract optimized parameters
-optimized_params = Optim.minimizer(result)
+optimized_params1 = Optim.minimizer(result)
+
+optimized_params[1] = optimized_params1[1]
+optimized_params[2] = optimized_params1[2]
+
 println("Optimized parameters: ", optimized_params)
 #Numerical calculations of dispersion spectra for case-1 (J > Γ)
 
