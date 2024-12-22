@@ -76,6 +76,8 @@ for yig_t, data_list in datasets.items():
     pt.values[np.abs(pt.values - mean_value) > threshold] = 0
     pt.values[pt.values > 0] = 0
 
+    pt.index.name = '0'
+
     pt.to_csv(output_path)
 
     print(f"Data preprocessed for yig_t={yig_t}mm")

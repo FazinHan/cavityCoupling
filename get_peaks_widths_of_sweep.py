@@ -2,26 +2,29 @@ import matlab.engine
 import os
 
 # Start MATLAB engine
-eng = matlab.engine.start_matlab()
+def get_peaks_widths_of_sweep(prominence, fine_smoothing, coarse_smoothing):
+    eng = matlab.engine.start_matlab()
 
-# Define the argument as a string
+    # Define the argument as a string
 
-cwd = os.getcwd()
+    cwd = os.getcwd()
 
-eng.addpath(cwd, nargout=0)
+    eng.addpath(cwd, nargout=0)
 
-# Extract all filenames from 'data\yig_t_sweep_outputs'
-directory = os.path.join(cwd, 'data', 'yig_t_sweep_outputs')
-filenames = [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))]
-data_files = [i.strip('.csv') for i in filenames]
+    # Extract all filenames from 'data\yig_t_sweep_outputs'
+    directory = os.path.join(cwd, 'data', 'yig_t_sweep_outputs')
+    filenames = [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))]
+    data_files = [i.strip('.csv') for i in filenames]
 
-# print(data_files)
+    # print(data_files)
 
-os.makedirs(os.path.join(directory,'peaks_widths'), exist_ok=True)
+    os.makedirs(os.path.join(directory,'peaks_widths'), exist_ok=True)
 
-for data in data_files:
-    eng.s21_optimiser(data, nargout=0)
-    print(f"Processed {data}.")
-# Close the MATLAB engine
-eng.quit()
+    for data in data_files:
+        eng.s21_optimiser(data, prominence, fine_smoothing, coarse_smoothing, nargout=0)
+        print(f"Processed {data}.")
+    # Close the MATLAB engine
+    eng.quit()
 
+if __name__ == "__main__":
+    get_peaks_widths_of_sweep(0.5,.1, 0) # ref line 24
