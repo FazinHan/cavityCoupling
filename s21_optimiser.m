@@ -21,8 +21,10 @@ function fit_params_matrix = peak_aware_fitter3(filename, min_prominence, fine_s
     for col=1:num_data
         smoothed_data = smooth(s21_full(:,col),fine_smoothing, 'lowess');
         [pks, locs, widths, prominence] = findpeaks(-1*smoothed_data, frequencies,'MinPeakProminence',min_prominence,'MinPeakDistance',.1,'SortStr','descend','NPeaks',2);
-        fit_params_matrix(1:2,col) = locs;
-        fit_params_matrix(3:4,col) = widths;
+        [sorted_locs, sort_idx] = sort(locs, 'ascend');
+        fit_params_matrix(1:2,col) = sorted_locs;
+        fit_params_matrix(3:4,col) = widths(sort_idx);
+        % fit_params_matrix(3:4,col) = widths;
     end
 
 
