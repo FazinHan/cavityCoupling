@@ -1,5 +1,6 @@
 import matlab.engine
 import os
+from plotter_t_sweep_p_w import plotter
 
 # Start MATLAB engine
 def get_peaks_widths_of_sweep(prominence, fine_smoothing, coarse_smoothing):
@@ -20,11 +21,12 @@ def get_peaks_widths_of_sweep(prominence, fine_smoothing, coarse_smoothing):
 
     os.makedirs(os.path.join(directory,'peaks_widths'), exist_ok=True)
 
-    for data in data_files:
-        eng.s21_optimiser(data, prominence, fine_smoothing, coarse_smoothing, nargout=0)
-        print(f"Processed {data}.")
+    for file in data_files:
+        eng.s21_optimiser(file, prominence, fine_smoothing, coarse_smoothing, nargout=0)
+        print(f"Processed {file}.")
     # Close the MATLAB engine
     eng.quit()
 
 if __name__ == "__main__":
-    get_peaks_widths_of_sweep(0.5,.1, 0) # ref line 24
+    get_peaks_widths_of_sweep(0.2,.1, 0) # ref line 24
+    plotter()
