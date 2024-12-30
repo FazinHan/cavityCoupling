@@ -179,6 +179,6 @@ nohup.out
 *.out
 
 watcher
-local_fit_plot.jl
+# local_fit_plot.jl
 
 *test*
