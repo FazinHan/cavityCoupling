@@ -1,10 +1,10 @@
 using QuantumCumulants
 using OrdinaryDiffEq, ModelingToolkit
-using Optim
+# using Optim
 using DifferentialEquations
 using PyPlot
 # using NPZ
-using ArgParse
+# using ArgParse
 # using BenchmarkTools
 using DelimitedFiles
 using BeepBeep
@@ -70,11 +70,11 @@ function main(type, optimized_params)
     function main_calc_real_part_opt(Hlist,ω2n,g1n,g2n)
         occupationList1 = Float64[]; occupationList2 = Float64[];
         for H in Hlist
-                An=substitute( A, Dict(ω1=>ω1n(H),ω2=>ω2n*1e10,ω3=>ω3n(H),g1=>g1n*2e9*pi,g2=>g2n*2e9*pi,γ1=>γ1n*2e9*pi,γ2=>γ2n*2e9*pi,γ3=>γ3n*2e9*pi))
+                An=substitute( A, Dict(ω1=>ω1n(H),ω2=>ω2n*2e9*pi,ω3=>ω3n(H),g1=>g1n*2e9*pi,g2=>g2n*2e9*pi,γ1=>γ1n*2e9*pi,γ2=>γ2n*2e9*pi,γ3=>γ3n*2e9*pi))
                 Ann = 1im * zeros(3,3)
                 for i=1:3
                     for j=1:3
-                        Ann[i,j] = real(An[i,j]).val + 1im * imag(An[i,j]).val
+                        Ann[i,j] = real(An[i,j]) + 1im * imag(An[i,j])
                     end
                 
                 end
@@ -116,7 +116,7 @@ function main(type, optimized_params)
                 Ann = 1im * zeros(3,3)
                 for i=1:3
                     for j=1:3
-                        Ann[i,j] = real(An[i,j]).val + 1im * imag(An[i,j]).val
+                        Ann[i,j] = real(An[i,j]) + 1im * imag(An[i,j])
                     end
                 
                 end
@@ -173,17 +173,17 @@ function main(type, optimized_params)
         return sum(sq_error)
     end
 
-    initial_params = optimized_params
+    # initial_params = optimized_params
 
-    objective(params) = inter(Hlist, params)
+    # objective(params) = inter(Hlist, params)
 
-    # # Perform the optimization
-    lower = [3.1, 0, 0]
-    upper = [3.3, 1, 1]
-    inner_optimizer = BFGS()
-    result = optimize(objective,lower,upper,initial_params,Fminbox(inner_optimizer))
-    # # Extract optimized parameters
-    optimized_params = Optim.minimizer(result)
+    # # # Perform the optimization
+    # lower = [3.1, 0, 0]
+    # upper = [3.3, 1, 1]
+    # inner_optimizer = BFGS()
+    # result = optimize(objective,lower,upper,initial_params,Fminbox(inner_optimizer))
+    # # # Extract optimized parameters
+    # optimized_params = Optim.minimizer(result)
     # optimized_params = [0.05, 0.19]
 
     println("Optimized parameters: ", optimized_params)
@@ -213,16 +213,16 @@ end
 # types = ["yig_t_0.06","yig_t_0.1"]
 
 
-function parse_command_line()
-    s = ArgParseSettings()
-    @add_arg_table s begin
-        "--thickness"
-        help = "Set the thickness value"
-        arg_type = Int64
-        required = true
-    end
-    return parse_args(s)
-end
+# function parse_command_line()
+#     s = ArgParseSettings()
+#     @add_arg_table s begin
+#         "--thickness"
+#         help = "Set the thickness value"
+#         arg_type = Int64
+#         required = true
+#     end
+#     return parse_args(s)
+# end
 
 function parallel_main(files)
 Threads.@threads for file in files
@@ -242,23 +242,24 @@ function plot_multiple_calculations(params)
     # files = keys(params)
     files = sort(collect(keys(params)))
     num_plots = length(files)
-    nrows = 2
-    ncols = ceil(Int, num_plots / nrows)
+    ncols = 2
+    nrows = ceil(Int, num_plots / ncols)
 
     # Create a figure and a grid of subplots
-    fig, axes = subplots(nrows, ncols, figsize=(5*ncols, 10))
+    fig, axes = subplots(nrows, ncols, figsize=(5*ncols, 5*nrows))
     idx = 6
     
-    Threads.@threads for (i, file) in enumerate(files)
+    for (i, file) in enumerate(files)
     # for file in files
         param = params[file]
         Hlist, frequencies, s21, occupationList = main(file, param)
-        if idx == 5
-            ax = axes[7]
-        else
-            ax = axes[(idx+2)%7]
-        end
-        idx = (idx+2)%7
+        # if idx == 5
+        #     ax = axes[7]
+        # else
+        #     ax = axes[(idx+2)%7]
+        # end
+        # idx = (idx+2)%7
+        ax=axes[i]
 
         t = round(parse(Float64, split(file, "_")[3]), digits=3)
 
@@ -282,8 +283,8 @@ function plot_multiple_calculations(params)
     end
 
     tight_layout()
-    savefig("combined_plots_BFGS.png")
-    println("Saved figure to combined_plots.png")
+    savefig("combined_plots_vertical.png")
+    println("Saved figure to combined_plots_vertical.png")
     close(fig)  # Close the figure if you don't want to display it
 end
 
