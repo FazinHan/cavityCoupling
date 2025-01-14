@@ -55,18 +55,11 @@ function main(type, optimized_params)
     locs = df[:,1:2] * 2e9 * pi;
     locs = sort(locs, dims=2)
     Hlist = full_data[1,2:end];
-    # println(size(Hlist))
-    # println(size(locs))
-    # plot(Hlist, locs[:,1], "bo", markersize=.5);plot(Hlist, locs[:,2], "ro", markersize=.5);
-    # xlabel("Magnetic Field (Oe)"); ylabel("Frequency (GHz)");
-    #Numerical calculations of dispersion spectra for case-1 (J > Γ)
 
     γ1n=0.1; γ2n=0.00469; γ3n=1.4e-4;
     ω3n = H -> y3 * (H*(H+M_3))^.5
     ω1n = H -> y1 * (H*(H+M_1))^.5
-    # len = size(Hlist_o)[1]
-    # Hlist = range(100,1600, length=len) |> collect
-    # Hlist = range(0.720, 0.920, length=100) |> collect
+
     function main_calc_real_part_opt(Hlist,ω2n,g1n,g2n)
         occupationList1 = Float64[]; occupationList2 = Float64[];
         for H in Hlist
@@ -138,15 +131,7 @@ function main(type, optimized_params)
         return occupationList
     end
 
-    # occupationList = main_calc_real_part_opt(Hlist,g1n,g2n)
-
-    # plot(Hlist,occupationList[:,1],"r");
-    # plot(Hlist,occupationList[:,2],"g");
-    # plot(Hlist,occupationList[:,3],"b");
-    # plot(Hlist, locs[:,1], "bo", markersize=.5);plot(Hlist, locs[:,2], "ro", markersize=.5);
-    # xlabel("Magnetic Field (Oe)"); ylabel("Frequency (GHz)")
-
-    # ylim(2.5e10, 4e10)
+    
     root = joinpath(pwd(),"results")
 
     function inter(Hlist, params)
@@ -173,38 +158,12 @@ function main(type, optimized_params)
         return sum(sq_error)
     end
 
-    # initial_params = optimized_params
-
-    # objective(params) = inter(Hlist, params)
-
-    # # # Perform the optimization
-    # lower = [3.1, 0, 0]
-    # upper = [3.3, 1, 1]
-    # inner_optimizer = BFGS()
-    # result = optimize(objective,lower,upper,initial_params,Fminbox(inner_optimizer))
-    # # # Extract optimized parameters
-    # optimized_params = Optim.minimizer(result)
-    # optimized_params = [0.05, 0.19]
 
     println("Optimized parameters: ", optimized_params)
-    #Numerical calculations of dispersion spectra for case-1 (J > Γ)
 
     occupationList = main_calc_real_part_full(Hlist,optimized_params...)
 
     return (Hlist, frequencies, s21, occupationList)
-
-    pcolormesh(Hlist, frequencies, s21, cmap=:jet)
-    plot(Hlist,occupationList[:,1],"k");plot(Hlist,occupationList[:,2],"k");plot(Hlist,occupationList[:,3],"k");
-    # plot(Hlist, locs[:,1], "bo", markersize=.7);plot(Hlist, locs[:,2], "bo", markersize=.7);
-    xlabel("Magnetic Field (Oe)"); ylabel("Frequency (GHz)")
-
-    # xlim(0.720, 0.920)
-    # xlim(0, 35.920)
-    title(string("\$g_1\$=", round(optimized_params[2], digits=3), "; \$g_2\$=", round(optimized_params[3], digits=3)))
-    ylim(2.75e10, 3.95e10)
-    savefig(joinpath(root,"fitted","$type.png"))
-    clf()
-    println("Saved figure to $type.png")
 end
 
 # types = ["strong20","strong25","strong50","strong2"]

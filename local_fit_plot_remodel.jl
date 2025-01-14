@@ -47,9 +47,8 @@ function main(type, optimized_params)
         # Define the fundamental operators
         @qnumbers m1::Destroy(h,1) a_r::Destroy(h,2) m2::Destroy(h,3)
         #            magnon PY          resonator        magnon YIG
-        # @syms t::Real
-        # @register_symbolic g1(t) 
-        # @register_symbolic g2(t)
+        @syms t::Real
+        @register_symbolic g1(t) g2(t)
 
         # Define g1 and g2 as functions of yig_t
         g1(t) = (a1 * log(t) + b1)*2e9*pi

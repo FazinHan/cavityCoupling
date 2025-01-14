@@ -31,11 +31,11 @@ plt.figure(figsize=(8, 5))
 
 # Plot g1 data and log fit
 plt.scatter(t, g1, label='g1 data', marker='o', color='blue')
-plt.plot(t_fit, g1_log_fit, label=f'g1 log fit', color='blue', linestyle='--')
+plt.plot(t_fit, g1_log_fit, label=f'g1 log fit: a={round(params_log_g1[0],3)} b={round(params_log_g1[1],3)}', color='blue', linestyle='--')
 
 # Plot g2 data and log fit
 plt.scatter(t, g2, label='g2 data', marker='x', color='orange')
-plt.plot(t_fit, g2_log_fit, label=f'g2 log fit', color='orange', linestyle='--')
+plt.plot(t_fit, g2_log_fit, label=f'g2 log fit: a={round(params_log_g2[0],3)} b={round(params_log_g2[1],3)}', color='orange', linestyle='--')
 
 # Add labels, legend, and grid
 plt.xlabel('t ($\\mu$m)')
@@ -43,4 +43,4 @@ plt.ylabel('g values (arb. units)')
 plt.title('g1 and g2 vs t with logarithmic fits')
 plt.legend()
 plt.tight_layout()
-plt.savefig("g1g2_vs_t_log_plot.png")
+plt.savefig("g vs t.png")
