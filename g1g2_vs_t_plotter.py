@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 
 # Load the uploaded CSV file
-file_path = 'combined_plots_params.csv'
+file_path = 'combined_plots_params copy.csv'
 data = pd.read_csv(file_path)
 
 # Extract columns for fitting and plotting

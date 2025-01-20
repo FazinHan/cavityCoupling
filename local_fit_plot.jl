@@ -184,10 +184,10 @@ end
 # end
 
 function parallel_main(files)
-Threads.@threads for file in files
-    main(file)
-end
-return nothing
+    Threads.@threads for file in files
+        main(file)
+    end
+    return nothing
 end
 
 function serial_main(files, optimized_params)
@@ -222,7 +222,7 @@ function plot_multiple_calculations(params)
 
         t = round(parse(Float64, split(file, "_")[3]), digits=3)
 
-        im = ax.pcolormesh(Hlist, frequencies, s21, cmap=:inferno_r)
+        im = ax.pcolormesh(Hlist, frequencies, s21, cmap=:inferno_r, shading="auto", norm=matplotlib.colors.Normalize(vmin=minimum(s21), vmax=maximum(s21)))
         ax.plot(Hlist, occupationList[:,1], "w")
         ax.plot(Hlist, occupationList[:,2], "w")
         ax.plot(Hlist, occupationList[:,3], "w")
@@ -252,13 +252,15 @@ end
 #     exit()
 # end
 
-params = Dict("yig_t_0.02" => [3.2, 0.15, 0.0], 
-             "yig_t_0.033333333333333" => [3.165, 0.15, 0.07],
-             "yig_t_0.046666666666667" => [3.16, 0.15, 0.1], 
-             "yig_t_0.06" => [3.18, 0.15, 0.13],
-             "yig_t_0.073333333333333" => [3.165, 0.13, 0.16], 
-             "yig_t_0.086666666666667" => [3.17, 0.13, 0.175], 
-             "yig_t_0.1" => [3.17, 0.14, 0.18])
+params = Dict(
+    "yig_t_0.02" => [3.2, 0.1, 0.0], 
+    "yig_t_0.033333333333333" => [3.165, 0.1, 0.075],
+    "yig_t_0.046666666666667" => [3.16, 0.12, 0.12], 
+    "yig_t_0.06" => [3.18, 0.14, 0.135],
+    "yig_t_0.073333333333333" => [3.165, 0.13, 0.155], 
+    "yig_t_0.086666666666667" => [3.17, 0.15, 0.17], 
+    "yig_t_0.1" => [3.17, 0.17, 0.18]
+    )
 
 println("Threads allocated: ", Threads.nthreads())
 
