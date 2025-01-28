@@ -55,7 +55,7 @@ plot(t_fit, g1_fit_vals, 'b--', 'DisplayName', sprintf('g1 fit: y = %.2f * x^{%.
 
 % g2 data and fit
 scatter(t, g2, 'r', 'DisplayName', 'g2 data');
-plot(t_fit, g2_fit_vals, 'r--', 'DisplayName', sprintf('g2 fit: y = %.2f * x^{%.2f} + %.2f', coeff_g2(1), coeff_g2(2), coeff_g1(3)));
+plot(t_fit, g2_fit_vals, 'r--', 'DisplayName', sprintf('g2 fit: y = %.2f * x^{%.2f} + %.2f', coeff_g2(1), coeff_g2(2), coeff_g2(3)));
 
 % Customize plot
 xlabel('t');

@@ -1,5 +1,5 @@
 % Load data from CSV file
-filename = 'combined_plots_params.csv';
+filename = '..\\combined_plots_params.csv';
 data = readtable(filename);
 
 % Extract columns
