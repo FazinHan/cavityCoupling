@@ -7,9 +7,10 @@ import csv
 csv_files = []
 
 # List of CSV file paths
-for roots, dirs, files in os.walk("data\\yig_t_sweep_outputs"):
-    if dirs == ['intermediaries', 'peaks_widths']:
-        csv_files = [os.path.join(roots, file) for file in files if file.endswith('.csv')]# if dirs == ['intermediaries', 'peaks_widths']]
+for roots, dirs, files in os.walk("data\\lone_t_sweep_yig"):
+    # if dirs == ['intermediaries', 'peaks_widths']:
+        # csv_files = [os.path.join(roots, file) for file in files if file.endswith('.csv')]# if dirs == ['intermediaries', 'peaks_widths']]
+    csv_files = [os.path.join(roots, file) for file in files if file.endswith('.csv')]# if dirs == ['intermediaries', 'peaks_widths']]
 
 for file in csv_files:
     # Load the data
@@ -31,8 +32,10 @@ for file in csv_files:
     plt.title(f"S21 Heatmap (yig_t={yig_t_value}mm)")
     plt.xlabel("Hdc")
     plt.ylabel("Frequency (GHz)")
+    plt.xlim((1000,1600))
+    plt.ylim((1250,1750))
     plt.grid(True, linestyle='--', alpha=0.5)
     plt.tight_layout()
-    os.makedirs("results\\yig_t_sweep_plots", exist_ok=True)
-    plt.savefig(f"results\\yig_t_sweep_plots\\yig_t_sweep_plot_{int(float(yig_t_value)*1e3)}um.png")
+    os.makedirs("results\\lone_yig_sweep", exist_ok=True)
+    plt.savefig(f"results\\lone_yig_sweep\\yig_t_sweep_plot_{int(float(yig_t_value)*1e3)}um.png")
     print(f"Plot saved for yig_t={yig_t_value}mm")

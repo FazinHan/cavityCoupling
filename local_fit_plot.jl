@@ -137,19 +137,6 @@ function main(type, optimized_params)
     function inter(Hlist, params)
         theoretical_values = main_calc_real_part_opt(Hlist, params...)
         
-        # Compute the sum of squared differences for each occupation list
-        # sum_sq_error = sum((theoretical_values[1] .- locs[:,1]).^2) +
-                    #    sum((theoretical_values[2] .- locs[:,2]).^2)
-                    #    sum((theoretical_values[3] .- locs[:,3]).^2)
-
-        # score3arr = (theoretical_values[3] .- locs[2,:]).^2
-        # score1arr = (theoretical_values[1] .- locs[1,:]).^2
-        # score2arr1 = (theoretical_values[2] .- locs[1,:]).^2
-        # score2arr2 = (theoretical_values[2] .- locs[2,:]).^2
-        # score2arr = min(score2arr1, score2arr2)
-        # sq_error = score1arr + score2arr + score3arr
-
-        # println(size(theoretical_values[1]))
         score1 = (theoretical_values[:,1] .- locs[:,2]).^2;
         score2 = (theoretical_values[:,2] .- locs[:,1]).^2;
         
