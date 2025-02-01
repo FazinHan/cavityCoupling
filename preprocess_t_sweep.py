@@ -70,10 +70,10 @@ for yig_t, data_list in datasets.items():
     std_value = np.std(pt.values)
 
     # Define a threshold to discard values far from the mean
-    threshold = 10 * std_value
+    threshold = 15 * std_value
 
     # Discard values far from the mean
-    pt.values[np.abs(pt.values - mean_value) > threshold] = 0
+    # pt.values[np.abs(pt.values - mean_value) > threshold] = 0
     pt.values[pt.values > 0] = 0
 
     pt.index.name = '0'

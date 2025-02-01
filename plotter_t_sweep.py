@@ -21,7 +21,7 @@ for file in csv_files:
     print(f"Processing yig_t={yig_t_value}mm")
 
 
-    freq = np.array(pivot_table.index)
+    freq = pivot_table.to_numpy()[:,0]
     hdc = np.array(pivot_table.columns)[1:].astype(float) # Skip the first column which is 'Frequency'
     s21 = pivot_table.to_numpy()[:,1:] # Skip the first column which is 'Frequency'
     
@@ -32,8 +32,8 @@ for file in csv_files:
     plt.title(f"S21 Heatmap (yig_t={yig_t_value}mm)")
     plt.xlabel("Hdc")
     plt.ylabel("Frequency (GHz)")
-    plt.xlim((1000,1600))
-    plt.ylim((1250,1750))
+    plt.ylim(4.3,6.3)
+    plt.xlim(1000,1600)
     plt.grid(True, linestyle='--', alpha=0.5)
     plt.tight_layout()
     os.makedirs("results\\lone_yig_sweep", exist_ok=True)
