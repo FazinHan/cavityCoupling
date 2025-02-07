@@ -6,8 +6,6 @@ __pycache__/
 # excluding cst files
 simulations/
 presentations/
-data/raw/
-data/old/
 references/
 tutorials/
 
@@ -43,6 +41,7 @@ data/
 results/
 paper writing/
 images/
+g vs t/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
