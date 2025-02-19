@@ -21,6 +21,14 @@ export OMP_NUM_THREADS=40
 
 source ~/.bashrc
 
-time mpiexec.hydra -genv I_MPI_DEBUG 9 -n $SLURM_NTASKS -genv OMP_NUM_THREADS 1 /scratch/fizaank.phy21.iitbhu/anaconda3/bin/python 
+cd cavityCoupling
+
+time mpiexec.hydra -genv I_MPI_DEBUG 9 -n $SLURM_NTASKS -genv OMP_NUM_THREADS 1 /scratch/fizaank.phy21.iitbhu/anaconda3/bin/python 3mode_analytical_solver.py
+
+if [ -f "S.p" ]; then
+    echo "File S.p created."
+else
+    echo "File S.p not created."
+fi
 
 echo "========= Job finished at `date` =========="
