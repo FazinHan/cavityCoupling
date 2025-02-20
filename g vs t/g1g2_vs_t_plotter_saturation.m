@@ -3,7 +3,7 @@ filename = 'combined_plots_params.csv';
 data = readtable(filename);
 
 % Extract columns
-t = data.t;
+t = data.t - .02;
 g1 = data.g1;
 g2 = data.g2;
 
