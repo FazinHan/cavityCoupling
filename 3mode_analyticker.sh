@@ -1,11 +1,14 @@
 #!/bin/bash
 #SBATCH -N 1
 #SBATCH --job-name=3mode.analyticker
-#SBATCH --output=output_run1/fermion.out
+#SBATCH --output=output.out
 #SBATCH --time=4-00:00:00
 #SBATCH --ntasks-per-node=1
 #SBATCH -A physics_engg
 #SBATCH --mail-user=fizaan.khan.phy21@iitbhu.ac.in
+
+WORKDIR=/job_outputs/$SLURM_JOB_ID
+mkdir -p "$WORKDIR" && cd "$WORKDIR" || exit -1
 
 echo "========= Job started  at `date` on `hostname -s` =========="
 
@@ -30,5 +33,8 @@ if [ -f "S.p" ]; then
 else
     echo "File S.p not created."
 fi
+
+mv output.out $WORKDIR/output.out
+mv S.p $WORKDIR/S.p
 
 echo "========= Job finished at `date` =========="
