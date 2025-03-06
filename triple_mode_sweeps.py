@@ -136,6 +136,8 @@ solution4 = sp.solve(eq7.subs(pout, solution3[0]), s21)
 # Assign the value of s21 to a variable
 S = solution4[0]
 
+print("solution computed\nstarting plotter...")
+
 import pickle
 pickle.dump(S, open('s21_analytical.p', 'wb'))
 
@@ -160,6 +162,8 @@ Hlist = np.array(full_data.columns)[1:].astype(float) # Skip the first column wh
 # Hlist = np.linspace(1.050, 1.350, Hlist.size)
 s21 = full_data.to_numpy()[:,1:] # Skip the first column which is 'Frequency'
 
+print("all data loaded")
+
 # H_values = np.linspace(0.600, 1.500, 201)
 H_values = Hlist
 # w_values = np.linspace(3.5, 6.5, 501)
@@ -167,6 +171,8 @@ w_values = frequencies
 
 # Convert symbolic expression s21 to a NumPy function
 s21_func = sp.lambdify((w,), sp.Abs(S), modules='numpy')
+
+print("starting lambda computation...")
 
 # Initialize a list to store s21_f
 s21_f = []
@@ -194,6 +200,7 @@ s21_f = np.array(s21_f).T  # Transpose s21_f here
 H_f = np.array(H_values)
 w_f = np.array(w_values)
 
+print("arrays created\nplotting...")
 
 # Create a contour plot
 #contour = plt.contourf(H_f, w_f, s21_f, )
@@ -205,6 +212,7 @@ plt.ylabel('w')
 # plt.title('Contour Plot of s21')
 plt.tight_layout()
 plt.savefig('s21_contour_plot_3mode.png')
+print("plot saved")
 
 #print(s21_f)
 #print(H_f)
