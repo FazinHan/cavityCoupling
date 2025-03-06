@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -N 1
 #SBATCH --job-name=3mode.analyticker
-#SBATCH --output=output_run1/fermion.out
+#SBATCH --output=analytical3mode.out
 #SBATCH --time=4-00:00:00
 #SBATCH --ntasks-per-node=1
 #SBATCH -A physics_engg
