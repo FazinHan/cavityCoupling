@@ -36,25 +36,84 @@ g2_value=0.033
 g3_value=0.058
 
 
-eq1=eq11.subs({v1:v1_value,v2:v2_value,v3:v3_value,w2:w2_value,w3:w3_value,a:a_value,b:b_value,v:v_value,g1:g1_value,g2:g2_value,g3:g3_value})
-eq2=eq22.subs({v1:v1_value,v2:v2_value,v3:v3_value,w2:w2_value,w3:w3_value,a:a_value,b:b_value,v:v_value,g1:g1_value,g2:g2_value,g3:g3_value})
-eq3=eq33.subs({v1:v1_value,v2:v2_value,v3:v3_value,w2:w2_value,w3:w3_value,a:a_value,b:b_value,v:v_value,g1:g1_value,g2:g2_value,g3:g3_value})
-
-eq4=eq44.subs({v1:v1_value,v2:v2_value,v3:v3_value,w2:w2_value,w3:w3_value,a:a_value,b:b_value,v:v_value,g1:g1_value,g2:g2_value,g3:g3_value})
-eq5=eq55.subs({v1:v1_value,v2:v2_value,v3:v3_value,w2:w2_value,w3:w3_value,a:a_value,b:b_value,v:v_value,g1:g1_value,g2:g2_value,g3:g3_value})
-eq6=eq66.subs({v1:v1_value,v2:v2_value,v3:v3_value,w2:w2_value,w3:w3_value,a:a_value,b:b_value,v:v_value,g1:g1_value,g2:g2_value,g3:g3_value})
+eq1=eq11.subs({v1:v1_value,
+                v2:v2_value,
+                v3:v3_value,
+                w2:w2_value,
+                w3:w3_value,
+                a:a_value,
+                b:b_value,
+                v:v_value,
+                g1:g1_value,
+                g2:g2_value,
+                g3:g3_value})
+eq2=eq22.subs({v1:v1_value,
+                v2:v2_value,
+                v3:v3_value,
+                w2:w2_value,
+                w3:w3_value,
+                a:a_value,
+                b:b_value,
+                v:v_value,
+                g1:g1_value,
+                g2:g2_value,
+                g3:g3_value})
+eq3=eq33.subs({v1:v1_value,
+                v2:v2_value,
+                v3:v3_value,
+                w2:w2_value,
+                w3:w3_value,
+                a:a_value,
+                b:b_value,
+                v:v_value,
+                g1:g1_value,
+                g2:g2_value,
+                g3:g3_value})
+eq4=eq44.subs({v1:v1_value,
+                v2:v2_value,
+                v3:v3_value,
+                w2:w2_value,
+                w3:w3_value,
+                a:a_value,
+                b:b_value,
+                v:v_value,
+                g1:g1_value,
+                g2:g2_value,
+                g3:g3_value})
+eq5=eq55.subs({v1:v1_value,
+                v2:v2_value,
+                v3:v3_value,
+                w2:w2_value,
+                w3:w3_value,
+                a:a_value,
+                b:b_value,
+                v:v_value,
+                g1:g1_value,
+                g2:g2_value,
+                g3:g3_value})
+eq6=eq66.subs({v1:v1_value,
+                v2:v2_value,
+                v3:v3_value,
+                w2:w2_value,
+                w3:w3_value,
+                a:a_value,
+                b:b_value,
+                v:v_value,
+                g1:g1_value,
+                g2:g2_value,
+                g3:g3_value})
 
 
 # Solve eq1 for b1 in terms of b2 and b3
-sol_b1 = sp.solve(eq1, (b1,v1,v2))[0]
+sol_b1 = sp.solve(eq1, w)[0]
 
 # Substitute sol_b1 into eq2 and solve for b2 in terms of b3
 eq2_sub = eq2.subs(b1, sol_b1)
-sol_b2 = sp.solve(eq2_sub, (v1,v2,b2))[0]
+sol_b2 = sp.solve(eq2_sub, w)[0]
 
 # Substitute sol_b1 and sol_b2 into eq3 and solve for b3
 eq3_sub = eq3.subs({b1: sol_b1, b2: sol_b2})
-sol_b3 = sp.solve(eq3_sub, (v1,v2,b3))[0]
+sol_b3 = sp.solve(eq3_sub, w)[0]
 
 # Substitute sol_b3 back into sol_b2 to get the final expression for b2
 sol_b2_final = sol_b2.subs(b3, sol_b3)
@@ -107,7 +166,7 @@ H_values = Hlist
 w_values = frequencies
 
 # Convert symbolic expression s21 to a NumPy function
-s21_func = sp.lambdify((w, w1, w2, v1, v2), sp.Abs(S), modules='numpy')
+s21_func = sp.lambdify((w,), sp.Abs(S), modules='numpy')
 
 # Initialize a list to store s21_f
 s21_f = []
