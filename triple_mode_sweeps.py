@@ -79,3 +79,79 @@ S = solution4[0]
 
 import pickle
 pickle.dump(S, open('s21_analytical.p', 'wb'))
+
+import pandas as pd
+import os
+
+
+
+# Define parameter ranges
+type = "yig_t_0.02"
+
+
+root = os.path.join("C:\\Users\\freak\\OneDrive\\Documents\\core\\Projects\\cavityCoupling","data","lone_t_sweep_yig")
+file_path_full = os.path.join(root,f"{type}.csv")
+
+full_data = pd.read_csv(file_path_full)
+
+# Display the first few rows of the DataFrame
+frequencies = full_data.to_numpy()[:,0]
+# frequencies = np.linspace(4.5, 6, frequencies.size) 
+Hlist = np.array(full_data.columns)[1:].astype(float) # Skip the first column which is 'Frequency'
+# Hlist = np.linspace(1.050, 1.350, Hlist.size)
+s21 = full_data.to_numpy()[:,1:] # Skip the first column which is 'Frequency'
+
+# H_values = np.linspace(0.600, 1.500, 201)
+H_values = Hlist
+# w_values = np.linspace(3.5, 6.5, 501)
+w_values = frequencies
+
+# Convert symbolic expression s21 to a NumPy function
+s21_func = sp.lambdify((w, w1, w2, v1, v2), sp.Abs(S), modules='numpy')
+
+# Initialize a list to store s21_f
+s21_f = []
+
+# Loop over each H value
+for H in H_values:
+    # Calculate wb_value for the current H value
+    wb1_value = 1.68e-2/2/np.pi*np.sqrt(H * (H + 1750))
+    wb2_value = 2.94e-3*np.sqrt(H * (H + 10900))
+    # wb_value = 2.8*np.sqrt(H * (H + 0.172))
+    # w1_value=1.38284384+(3.19289744)*H
+    
+    # Initialize a list to store s21_3 values for the current H value
+    s21_f_H = []
+    
+    for w_val in w_values:
+        s21_2 = s21_func(w_val, wb1_value, wb2_value)
+        s21_f_H.append(s21_2)
+      
+    # Append s21_f_H to s21_f as a row
+    s21_f.append(s21_f_H)
+
+# Convert s21_f to a numpy array and transpose it
+s21_f = np.array(s21_f).T  # Transpose s21_f here
+H_f = np.array(H_values)
+w_f = np.array(w_values)
+
+
+# Create a contour plot
+#contour = plt.contourf(H_f, w_f, s21_f, )
+contour = plt.contourf(H_f, w_f, s21_f, cmap='inferno', levels=np.linspace(0, 2, 501))
+plt.colorbar(contour)
+plt.xlabel('H')
+plt.ylim([5.5,6])    
+plt.ylabel('w')
+# plt.title('Contour Plot of s21')
+plt.tight_layout()
+plt.savefig('s21_contour_plot_3mode.png')
+
+#print(s21_f)
+#print(H_f)
+#print(w_f)
+#s21_f.shape[0]
+#H_f.shape[0]
+#plt.ylim([3.6, 4.4])
+#plt.xlim([1250, 1450])
+# plt.clim(-7, 0)
