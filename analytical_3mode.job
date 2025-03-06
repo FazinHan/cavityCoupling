@@ -7,7 +7,7 @@
 #SBATCH -A physics_engg
 #SBATCH --mail-user=fizaan.khan.phy21@iitbhu.ac.in
 
-WORKDIR=/job_outputs/$SLURM_JOB_ID
+WORKDIR=/scratch/fizaank.phy21.iitbhu/cavityCoupling/job_outputs/$SLURM_JOB_ID
 mkdir -p "$WORKDIR" && cd "$WORKDIR" || exit -1
 
 echo "========= Job started  at `date` on `hostname -s` =========="
