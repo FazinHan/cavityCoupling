@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -N 3
 #SBATCH --job-name=3mode.analyticker
-#SBATCH --output=output.out
+#SBATCH --output=output_%j.out
 #SBATCH --time=4-00:00:00
 #SBATCH --ntasks=100
 #SBATCH -A physics_engg
@@ -27,13 +27,13 @@ source ~/.bashrc
 
 time mpiexec.hydra -genv I_MPI_DEBUG 9 -n $SLURM_NTASKS -genv OMP_NUM_THREADS 40 /scratch/fizaank.phy21.iitbhu/anaconda3/bin/python parametric_sweep_analytical.py
 
-if [ -f "*.p" ]; then
+if [ -f "*$SLURM_JOB_ID.p" ]; then
     echo "Files created."
 else
     echo "Files not created."
 fi
 
-mv output.out $WORKDIR/output.out
-mv *.p $WORKDIR/*.p
+mv output_$SLURM_JOB_ID.out $WORKDIR/output.out
+mv *$SLURM_JOB_ID.p $WORKDIR/*.p
 
 echo "========= Job finished at `date` =========="

@@ -1,6 +1,7 @@
 import sympy as sp
 import numpy as np
 import matplotlib.pyplot as plt
+from mpi4py import MPI
 sp.init_printing()
 
 # Define other symbolic variables
@@ -147,7 +148,8 @@ def compute_s21(v1_value, v2_value):
 
     import pickle
     # S = pickle.load(file:=open('s21_analytical.p', 'rb'))
-    pickle.dump(S, file:=open(f's21_analytical_v1={v1_value}_v2={v2_value}.p', 'wb'))
+    jobid = os.popen("echo $SLURM_JOB_ID").read()
+    pickle.dump(S, file:=open(f's21_analytical_v1={v1_value}_v2={v2_value}_{jobid}.p', 'wb'))
     print("solution saved")
     file.close()
 # import pandas as pd
