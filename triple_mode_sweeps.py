@@ -141,7 +141,8 @@ def compute_s21(v1_value, v2_value):
     try:
         solution4 = sp.solve(eq7.subs(pout, solution3[0]), s21)
     except IndexError:
-        solution4 = sp.solve(eq7.subs(pout, solution3), s21)
+        # solution4 = sp.solve(eq7.subs(pout, solution3), s21)
+        print("no solution found for v1 = ", v1_value, " and v2 = ", v2_value)
 
     # Assign the value of s21 to a variable
     S = solution4[0]
