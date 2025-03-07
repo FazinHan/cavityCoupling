@@ -1,15 +1,15 @@
 #!/bin/bash
 #SBATCH -N 3
 #SBATCH --job-name=3mode.analyticker
-#SBATCH --output=job_outputs/%j/output.out
+#SBATCH --output=output.out
 #SBATCH --time=4-00:00:00
 #SBATCH --ntasks=100
 #SBATCH -A physics_engg
 #SBATCH --mail-user=fizaan.khan.phy21@iitbhu.ac.in
 #SBATCH --partition=cpu
 
-# WORKDIR=/scratch/fizaank.phy21.iitbhu/cavityCoupling/job_outputs/$SLURM_JOB_ID
-# mkdir -p "$WORKDIR" && cd "$WORKDIR" || exit -1
+WORKDIR=/scratch/fizaank.phy21.iitbhu/cavityCoupling/job_outputs/$SLURM_JOB_ID
+mkdir -p "$WORKDIR" && cd "$WORKDIR" || exit -1
 
 echo "========= Job started  at `date` on `hostname -s` =========="
 
@@ -33,7 +33,7 @@ else
     echo "Files not created."
 fi
 
-# mv output.out $WORKDIR/output.out
+mv output.out $WORKDIR/output.out
 mv *.p $WORKDIR/*.p
 
 echo "========= Job finished at `date` =========="
