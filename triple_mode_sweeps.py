@@ -138,7 +138,10 @@ def compute_s21(v1_value, v2_value):
     solution3 = sp.solve(new_eq_substituted, pout)
 
     # Solve equation eq5 for s21 after substituting pout from solution3
-    solution4 = sp.solve(eq7.subs(pout, solution3[0]), s21)
+    try:
+        solution4 = sp.solve(eq7.subs(pout, solution3[0]), s21)
+    except IndexError:
+        solution4 = sp.solve(eq7.subs(pout, solution3), s21)
 
     # Assign the value of s21 to a variable
     S = solution4[0]
