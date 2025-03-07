@@ -6,6 +6,7 @@
 #SBATCH --ntasks=100
 #SBATCH -A physics_engg
 #SBATCH --mail-user=fizaan.khan.phy21@iitbhu.ac.in
+#SBATCH --partition=hm
 
 # WORKDIR=/scratch/fizaank.phy21.iitbhu/cavityCoupling/job_outputs/$SLURM_JOB_ID
 # mkdir -p "$WORKDIR" && cd "$WORKDIR" || exit -1
