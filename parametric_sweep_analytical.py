@@ -6,11 +6,16 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
 
-v1_array = np.linspace(0, .001, 10)
-v2_array = np.linspace(0, .01, 10)
+array_density = 10
 
-print(f"computing s21 for rank {rank} : v1 = {v1_array[rank]} and v2 = {v2_array[rank]}")
+v1_array = np.linspace(0, .001, array_density)
+v2_array = np.linspace(0, .01, array_density)
 
-compute_s21(v1_array[rank],v2_array[rank])
+v1_value = v1_array[rank%array_density]
+v2_value = v2_array[rank//array_density]
 
-print(f"rank {rank} done : v1 = {v1_array[rank]} and v2 = {v2_array[rank]}")
+print(f"computing s21 for rank {rank} : v1 = {v1_value} and v2 = {v2_value}")
+
+compute_s21(v1_value,v2_value)
+
+print(f"rank {rank} done : v1 = {v1_value} and v2 = {v2_value}")
