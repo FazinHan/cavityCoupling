@@ -2,6 +2,7 @@ import sympy as sp
 import numpy as np
 import matplotlib.pyplot as plt
 from mpi4py import MPI
+import os
 sp.init_printing()
 
 # Define other symbolic variables
