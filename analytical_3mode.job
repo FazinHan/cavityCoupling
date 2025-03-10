@@ -34,6 +34,11 @@ else
 fi
 
 mv output_$SLURM_JOB_ID.out $WORKDIR/output.out
-mv *$SLURM_JOB_ID.p $WORKDIR/*.p
+mv s21_analytical_v1=* $WORKDIR
+
+cd $WORKDIR
+echo "combining results..."
+
+
 
 echo "========= Job finished at `date` =========="
