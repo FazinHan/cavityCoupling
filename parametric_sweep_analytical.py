@@ -16,6 +16,15 @@ v2_value = v2_array[rank//array_density]
 
 print(f"computing s21 for rank {rank} : v1 = {v1_value} and v2 = {v2_value}")
 
-compute_s21(v1_value,v2_value)
+S = compute_s21(v1_value,v2_value)
 
 print(f"rank {rank} done : v1 = {v1_value} and v2 = {v2_value}")
+
+gathered_S = comm.gather(S, root=0)
+
+if rank == 0:
+    print("Gathering results...")
+    result_dict = {f'({v1_value},{v2_value})': s for i, s in enumerate(gathered_S)}
+    import pickle
+    with open('s21_analytical_gathered.pkl', 'wb') as f:
+        pickle.dump(result_dict, f, protocol=pickle.HIGHEST_PROTOCOL)
