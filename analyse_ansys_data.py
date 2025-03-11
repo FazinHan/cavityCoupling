@@ -12,8 +12,8 @@ pivoted =  data.pivot(columns='bias []', index='Freq [GHz]', values='dB(S(2,1)) 
 
 s21_array = pivoted.to_numpy()
 
-plt.pcolormesh(pivoted.columns*1e-3, pivoted.index, s21_array, cmap='jet')
+plt.pcolormesh(pivoted.columns*1e-3, pivoted.index, s21_array, cmap='inferno')
 plt.xlabel('Bias [kA/m]')
 plt.ylabel('Frequency [GHz]')
 plt.colorbar()
-plt.show()
+plt.savefig("results\\ansys_sweep.png")
