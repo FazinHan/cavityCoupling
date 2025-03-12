@@ -17,8 +17,8 @@ v2_value = v2_array[rank//array_density]
 
 print(f"computing s21 for rank {rank} : v1 = {v1_value} and v2 = {v2_value}")
 
-# S = compute_s21(v1_value,v2_value)
-S = sp.sin(sp.sqrt(2))
+S = compute_s21(v1_value,v2_value)
+# S = sp.sin(sp.sqrt(2))
 
 
 print(f"rank {rank} done : v1 = {v1_value} and v2 = {v2_value}")
