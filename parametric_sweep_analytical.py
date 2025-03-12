@@ -32,7 +32,7 @@ if rank == 0:
     # result_dict = {f'({v1_value},{v2_value})': s for i, s in enumerate(gathered_S)}
     for sender in range(1,size):
         S = comm.recv(source=sender, tag=sender)
-        result_dict[f'({v1_array[sender%array_density]},{v2_array[sender//array_density]})'] = S
+        result_dict[(v1_array[sender%array_density],v2_array[sender//array_density])] = S
     import pickle
     with open('s21_analytical_gathered.pkl', 'wb') as f:
         pickle.dump(result_dict, f, protocol=pickle.HIGHEST_PROTOCOL)

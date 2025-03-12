@@ -39,7 +39,10 @@ MANIFEST
 legacy code/
 
 data/
-results/
+results/fitted/
+results/sim_recheck/
+results/lone_yig_sweep/
+results/yig_t_sweep_plots/
 paper writing/
 images/
 g vs t/
