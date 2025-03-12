@@ -1,6 +1,7 @@
-import numpy as numpy
+import numpy as np
 from mpi4py import MPI
 from triple_mode_sweeps import *
+import sympy as sp
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
@@ -16,15 +17,15 @@ v2_value = v2_array[rank//array_density]
 
 print(f"computing s21 for rank {rank} : v1 = {v1_value} and v2 = {v2_value}")
 
-S = compute_s21(v1_value,v2_value)
+# S = compute_s21(v1_value,v2_value)
+S = sp.sin(sp.sqrt(2))
 
-comm.send(S, dest=0, tag=rank)
 
 print(f"rank {rank} done : v1 = {v1_value} and v2 = {v2_value}")
 
-# gathered_S = comm.gather(S, root=0)
-
-if rank == 0:
+if rank != 0:
+    comm.send(S, dest=0, tag=rank)
+else:
     result_dict = dict()
     print("Gathering results...")
     # gathered_S = comm.recv()
