@@ -23,14 +23,14 @@ S = sp.sin(sp.sqrt(2))
 
 print(f"rank {rank} done : v1 = {v1_value} and v2 = {v2_value}")
 
-if rank != 0:
-    comm.send(S, dest=0, tag=rank)
-else:
+# if rank != 0:
+comm.send(S, dest=0, tag=rank)
+if rank == 0:
     result_dict = dict()
     print("Gathering results...")
     # gathered_S = comm.recv()
     # result_dict = {f'({v1_value},{v2_value})': s for i, s in enumerate(gathered_S)}
-    for sender in range(size):
+    for sender in range(1,size):
         S = comm.recv(source=sender, tag=sender)
         result_dict[f'({v1_array[sender%array_density]},{v2_array[sender//array_density]})'] = S
     import pickle
