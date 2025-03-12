@@ -151,12 +151,12 @@ def compute_s21(v1_value, v2_value):
     print("solution computed")
     # print("solution computed\nstarting plotter...")
 
-    import pickle
-    # S = pickle.load(file:=open('s21_analytical.p', 'rb'))
-    jobid = os.popen("echo $SLURM_JOB_ID").read()
-    pickle.dump(S, file:=open(f's21_analytical_v1={v1_value}_v2={v2_value}_{jobid}.p', 'wb'))
-    print("solution saved")
-    file.close()
+    # import pickle
+    # # S = pickle.load(file:=open('s21_analytical.p', 'rb'))
+    # jobid = os.popen("echo $SLURM_JOB_ID").read()
+    # pickle.dump(S, file:=open(f's21_analytical_v1={v1_value}_v2={v2_value}_{jobid}.p', 'wb'))
+    # print("solution saved")
+    # file.close()
 
     return S
 # import pandas as pd
