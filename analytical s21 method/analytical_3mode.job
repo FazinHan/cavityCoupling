@@ -25,6 +25,8 @@ export OMP_NUM_THREADS=40
 
 source ~/.bashrc
 
+cd analytical\ s21\ method
+
 time mpiexec.hydra -genv I_MPI_DEBUG 9 -n $SLURM_NTASKS -genv OMP_NUM_THREADS 40 /scratch/fizaank.phy21.iitbhu/anaconda3/bin/python parametric_sweep_analytical.py
 
 if [ -f "*$SLURM_JOB_ID.p" ]; then
