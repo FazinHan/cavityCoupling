@@ -36,3 +36,4 @@ if rank == 0:
     import pickle
     with open('s21_analytical_gathered.pkl', 'wb') as f:
         pickle.dump(result_dict, f, protocol=pickle.HIGHEST_PROTOCOL)
+    print("Results gathered and saved to s21_analytical_gathered.pkl")

@@ -34,7 +34,7 @@ else
 fi
 
 mv output_$SLURM_JOB_ID.out $WORKDIR/output.out
-mv s21_analytical* $WORKDIR
 mv s21_analytical_gathered.pkl results/s21_analytical_gathered_$SLURM_JOB_ID.pkl
+mv s21_analytical* $WORKDIR
 
 echo "========= Job finished at `date` =========="
