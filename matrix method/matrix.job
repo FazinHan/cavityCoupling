@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -N 3
+#SBATCH -N 2
 #SBATCH --job-name=matrics
 #SBATCH --output=output_%j.out
 #SBATCH --time=4-00:00:00

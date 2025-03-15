@@ -118,7 +118,7 @@ def s21_couplings(**kwargs):
     return peak_diff_1, peak_diff_2
 
 gamma1_arr = np.linspace(0,2*np.pi,axis_resolution)
-gamma2_arr = np.linspace(0,2*np.pi,axis_resolution)
+gamma2_arr = np.linspace(0,.12,axis_resolution)
 
 if rank == 0:
     diffs = np.zeros((axis_resolution, axis_resolution))
@@ -152,7 +152,7 @@ axs[1].set_ylabel('$2\\pi\\lambda_2^2$')
 # axs[1].title('Difference between peaks in s21_2')
 # axs[1].colorbar()
 axs[0].set_title('Py Coupling')
-axs[0].plot(.08,1.9,'r.')
+# axs[0].plot(.08,1.9,'r.')
 axs[1].set_title('YIG Coupling')
 # fig.suptitle("Peak separation not affected by damping")
 fig.tight_layout()
