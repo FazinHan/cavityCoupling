@@ -3,7 +3,7 @@
 #SBATCH --job-name=matrics
 #SBATCH --output=output_%j.out
 #SBATCH --time=4-00:00:00
-#SBATCH --ntasks=100
+#SBATCH --ntasks=80
 #SBATCH -A physics_engg
 #SBATCH --mail-user=fizaan.khan.phy21@iitbhu.ac.in
 #SBATCH --partition=cpu
