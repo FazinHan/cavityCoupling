@@ -8,7 +8,7 @@
 #SBATCH --mail-user=fizaan.khan.phy21@iitbhu.ac.in
 #SBATCH --partition=cpu
 
-WORKDIR=/scratch/fizaank.phy21.iitbhu/cavityCoupling/matrix\ method/jobs/$SLURM_JOB_ID
+WORKDIR="/scratch/fizaank.phy21.iitbhu/cavityCoupling/matrix\ method/jobs/$SLURM_JOB_ID"
 mkdir -p "$WORKDIR" && cd "$WORKDIR" || exit -1
 
 echo "========= Job started  at `date` on `hostname -s` =========="

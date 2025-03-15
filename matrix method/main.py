@@ -9,7 +9,10 @@ rank = comm.Get_rank()
 size = comm.Get_size()
 
 axis_resolution = 250
-chunk_size = axis_resolution//(size-1)
+try:
+    chunk_size = axis_resolution//(size-1)
+except TypeError:
+    chunk_size = 1
 
 def s21_symbolic(w, H, **kwargs):
     gamma_1 = kwargs.get('gamma_1', a)
