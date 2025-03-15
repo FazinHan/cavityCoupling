@@ -120,18 +120,26 @@ def s21_couplings(**kwargs):
 gamma1_arr = np.linspace(0,2*np.pi,axis_resolution)
 gamma2_arr = np.linspace(0,.12,axis_resolution)
 
+diffs = np.zeros((axis_resolution, axis_resolution))
+
 if rank == 0:
-    diffs = np.zeros((axis_resolution, axis_resolution))
     for i in range(1, size):
-        diffs[i,:] = comm.Recv(source=i, tag=13)
+        diffs += comm.Recv(source=i, tag=13)
 else:
-    diffs = []
-    for i in range(rank*chunk_size, (rank+1)*chunk_size):
-        gamma1 = gamma1_arr[i]
-        gamma2 = gamma2_arr[i]
-        peak1, peak2 = s21_couplings(gamma_1=gamma1, gamma_2=gamma2)[0,0]
-        diffs.append(np.diff([peak1, peak2]))
+    for i in range((rank-1)*chunk_size, rank*chunk_size):
+        for j in range(axis_resolution):
+            gamma1 = gamma1_arr[i]
+            gamma2 = gamma2_arr[j]
+            peak1, peak2 = s21_couplings(gamma_1=gamma1, gamma_2=gamma2)
+            diffs[i,j] = np.diff([peak1, peak2])
     comm.Send(np.array(diffs), dest=0, tag=13)
+
+for i in range(size * chunk_size, axis_resolution):
+    for j in range(axis_resolution):
+        gamma1 = gamma1_arr[i]
+        gamma2 = gamma2_arr[j]
+        peak1, peak2 = s21_couplings(gamma_1=gamma1, gamma_2=gamma2)
+        diffs[i,j] = np.diff([peak1, peak2])
 
 with open(f"diffs.npy", "wb") as f:
     np.save(f, diffs)
@@ -152,7 +160,7 @@ axs[1].set_ylabel('$2\\pi\\lambda_2^2$')
 # axs[1].title('Difference between peaks in s21_2')
 # axs[1].colorbar()
 axs[0].set_title('Py Coupling')
-# axs[0].plot(.08,1.9,'r.')
+# axs[0].plot(.08,1.9,'r9.')
 axs[1].set_title('YIG Coupling')
 # fig.suptitle("Peak separation not affected by damping")
 fig.tight_layout()
