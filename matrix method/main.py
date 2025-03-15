@@ -129,8 +129,8 @@ else:
     for i in range(rank*chunk_size, (rank+1)*chunk_size):
         gamma1 = gamma1_arr[i]
         gamma2 = gamma2_arr[i]
-        diff = s21_couplings(gamma_1=gamma1, gamma_2=gamma2)[0,0]
-        diffs.append(diff)
+        peak1, peak2 = s21_couplings(gamma_1=gamma1, gamma_2=gamma2)[0,0]
+        diffs.append(np.diff([peak1, peak2]))
     comm.Send(np.array(diffs), dest=0, tag=13)
 
 with open(f"diffs.npy", "wb") as f:
