@@ -2,14 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sympy.abc import a,b,c,w,x,y,z,g,h
 import sympy as sp
-from mpi4py import MPI
-
-comm = MPI.COMM_WORLD
-rank = comm.Get_rank()
-size = comm.Get_size()
 
 axis_resolution = 250
-chunk_size = axis_resolution//(size-1)
 
 def s21_symbolic(w, H, **kwargs):
     gamma_1 = kwargs.get('gamma_1', a)
@@ -120,18 +114,12 @@ def s21_couplings(**kwargs):
 gamma1_arr = np.linspace(0,2*np.pi,axis_resolution)
 gamma2_arr = np.linspace(0,2*np.pi,axis_resolution)
 
-if rank == 0:
-    diffs = np.zeros((axis_resolution, axis_resolution))
-    for i in range(1, size):
-        diffs[i,:] = comm.Recv(source=i, tag=13)
-else:
-    diffs = []
-    for i in range(rank*chunk_size, (rank+1)*chunk_size):
-        gamma1 = gamma1_arr[i]
-        gamma2 = gamma2_arr[i]
-        peak1, peak2 = s21_couplings(gamma_1=gamma1, gamma_2=gamma2)[0,0]
-        diffs.append(np.diff([peak1, peak2]))
-    comm.Send(np.array(diffs), dest=0, tag=13)
+diffs = np.array([[s21_couplings(gamma_1=gamma1, gamma_2=gamma2) for gamma1 in gamma1_arr] for gamma2 in gamma2_arr])[...,0]
+# for i in range(axis_resolution):
+#     gamma1 = gamma1_arr[i]
+#     gamma2 = gamma2_arr[i]
+#     peak1, peak2 = s21_couplings(gamma_1=gamma1, gamma_2=gamma2)[0,0]
+#     diffs.append(np.diff([peak1, peak2]))
 
 with open(f"diffs.npy", "wb") as f:
     np.save(f, diffs)
