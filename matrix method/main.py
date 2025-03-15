@@ -8,8 +8,8 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size() - 1 
 
-axis_resolution = 150
-chunk_size = 150//size
+axis_resolution = 250
+chunk_size = axis_resolution//size
 
 def s21_symbolic(w, H, **kwargs):
     gamma_1 = kwargs.get('gamma_1', a)
