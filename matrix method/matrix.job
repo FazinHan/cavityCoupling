@@ -1,9 +1,9 @@
 #!/bin/bash
-#SBATCH -N 2
+#SBATCH -N 3
 #SBATCH --job-name=matrics
 #SBATCH --output=output_%j.out
 #SBATCH --time=4-00:00:00
-#SBATCH --ntasks=80
+#SBATCH --ntasks=120
 #SBATCH -A physics_engg
 #SBATCH --mail-user=fizaan.khan.phy21@iitbhu.ac.in
 #SBATCH --partition=cpu
