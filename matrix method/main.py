@@ -11,7 +11,7 @@ size = comm.Get_size()
 axis_resolution = 250
 try:
     chunk_size = axis_resolution//(size-1)
-except TypeError:
+except ZeroDivisionError:
     chunk_size = 1
 
 def s21_symbolic(w, H, **kwargs):
