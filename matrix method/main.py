@@ -6,10 +6,10 @@ from mpi4py import MPI
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
-size = comm.Get_size() - 1 
+size = comm.Get_size()
 
 axis_resolution = 250
-chunk_size = axis_resolution//size
+chunk_size = axis_resolution//(size-1)
 
 def s21_symbolic(w, H, **kwargs):
     gamma_1 = kwargs.get('gamma_1', a)
