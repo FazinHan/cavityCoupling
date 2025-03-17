@@ -100,12 +100,12 @@ def s21_couplings(**kwargs):
 
     peak_indices_1 = np.where((s21_1[1:-1] > s21_1[:-2]) & (s21_1[1:-1] > s21_1[2:]))[0] + 1
     peak_x_values_1 = w[peak_indices_1]
-    peak_diff_1 = np.diff(peak_x_values_1)[0]
+    peak_diff_1 = np.diff(peak_x_values_1)
     # print("Differences between peaks in s21_1:", peak_diff_1)
 
     peak_indices_2 = np.where((s21_2[1:-1] > s21_2[:-2]) & (s21_2[1:-1] > s21_2[2:]))[0] + 1
     peak_x_values_2 = w[peak_indices_2]
-    peak_diff_2 = np.diff(peak_x_values_2)[0]
+    peak_diff_2 = np.diff(peak_x_values_2)
 
     if len(peak_diff_1) == 0:
         print(peak_x_values_1)
