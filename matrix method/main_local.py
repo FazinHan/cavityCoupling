@@ -2,8 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sympy.abc import a,b,c,w,x,y,z,g,h
 import sympy as sp
-
-axis_resolution = 250
+import os
+from parameters import *
 
 def s21_symbolic(w, H, **kwargs):
     gamma_1 = kwargs.get('gamma_1', a)
@@ -121,7 +121,7 @@ diffs = np.array([[s21_couplings(gamma_1=gamma1, gamma_2=gamma2) for gamma1 in g
 #     peak1, peak2 = s21_couplings(gamma_1=gamma1, gamma_2=gamma2)[0,0]
 #     diffs.append(np.diff([peak1, peak2]))
 
-with open(f"diffs.npy", "wb") as f:
+with open(os.path.join(os.path.dirname(__file__), 'diffs.npy'), "wb") as f:
     np.save(f, diffs)
 
 fig, axs = plt.subplots(1,2,sharey=False,figsize=(10,5))
@@ -145,7 +145,7 @@ axs[1].set_title('YIG Coupling')
 # fig.suptitle("Peak separation not affected by damping")
 fig.tight_layout()
 fig.colorbar(axs[0].collections[0], ax=axs, location="right", use_gridspec=False)
-plt.savefig("couplings.png")
+plt.savefig(os.path.join(os.path.dirname(__file__), 'couplings.png'))
 plt.close()
 
 # diffs = np.array([[s21_couplings(gamma_1=gamma1, gamma_2=gamma2) for gamma1 in gamma1_arr] for gamma2 in gamma2_arr])[...,0]

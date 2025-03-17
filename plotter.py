@@ -2,7 +2,7 @@ import numpy as np
 import re
 import matplotlib.pyplot as plt
 import os, sys
-from statsmodels.nonparametric.smoothers_lowess import lowess
+# from statsmodels.nonparametric.smoothers_lowess import lowess
 
 file_path = sys.argv[1]
 # file_path = os.path.join('data','raw',file_name)

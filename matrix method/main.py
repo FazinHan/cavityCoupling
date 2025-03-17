@@ -3,12 +3,13 @@ import matplotlib.pyplot as plt
 from sympy.abc import a,b,c,w,x,y,z,g,h
 import sympy as sp
 from mpi4py import MPI
+import os
+from parameters import *
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
 
-axis_resolution = 250
 chunk_size = axis_resolution//(size-1)
 
 def s21_symbolic(w, H, **kwargs):
@@ -99,12 +100,12 @@ def s21_couplings(**kwargs):
 
     peak_indices_1 = np.where((s21_1[1:-1] > s21_1[:-2]) & (s21_1[1:-1] > s21_1[2:]))[0] + 1
     peak_x_values_1 = w[peak_indices_1]
-    peak_diff_1 = np.diff(peak_x_values_1)
+    peak_diff_1 = np.diff(peak_x_values_1)[0]
     # print("Differences between peaks in s21_1:", peak_diff_1)
 
     peak_indices_2 = np.where((s21_2[1:-1] > s21_2[:-2]) & (s21_2[1:-1] > s21_2[2:]))[0] + 1
     peak_x_values_2 = w[peak_indices_2]
-    peak_diff_2 = np.diff(peak_x_values_2)
+    peak_diff_2 = np.diff(peak_x_values_2)[0]
 
     if len(peak_diff_1) == 0:
         print(peak_x_values_1)
@@ -131,7 +132,7 @@ else:
             gamma1 = gamma1_arr[i]
             gamma2 = gamma2_arr[j]
             peak1, peak2 = s21_couplings(gamma_1=gamma1, gamma_2=gamma2)
-            diffs[i,j] = np.diff([peak1, peak2])
+            diffs[i,j] = np.diff([peak1, peak2])[0]
     comm.Send(np.array(diffs), dest=0, tag=13)
 
 for i in range(size * chunk_size, axis_resolution):
@@ -139,9 +140,9 @@ for i in range(size * chunk_size, axis_resolution):
         gamma1 = gamma1_arr[i]
         gamma2 = gamma2_arr[j]
         peak1, peak2 = s21_couplings(gamma_1=gamma1, gamma_2=gamma2)
-        diffs[i,j] = np.diff([peak1, peak2])
+        diffs[i,j] = np.diff([peak1, peak2])[0]
 
-with open(f"diffs.npy", "wb") as f:
+with open(os.path.join(os.path.dirname(__file__), 'diffs.npy'), "wb") as f:
     np.save(f, diffs)
 
 fig, axs = plt.subplots(1,2,sharey=False,figsize=(10,5))
@@ -165,7 +166,7 @@ axs[1].set_title('YIG Coupling')
 # fig.suptitle("Peak separation not affected by damping")
 fig.tight_layout()
 fig.colorbar(axs[0].collections[0], ax=axs, location="right", use_gridspec=False)
-plt.savefig("couplings.png")
+plt.savefig(os.path.join(os.path.dirname(__file__), 'couplings.png'))
 plt.close()
 
 # diffs = np.array([[s21_couplings(gamma_1=gamma1, gamma_2=gamma2) for gamma1 in gamma1_arr] for gamma2 in gamma2_arr])[...,0]

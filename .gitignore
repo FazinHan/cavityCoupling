@@ -36,6 +36,8 @@ share/python-wheels/
 *.egg
 MANIFEST
 
+matrix method/misc.ipynb
+
 legacy code/
 
 data/
