@@ -1,1 +1,1 @@
-axis_resolution = 250
+axis_resolution = 320

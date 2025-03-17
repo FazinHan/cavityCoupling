@@ -23,13 +23,14 @@ for file in file_paths:
     s21_array = full_array[:,1:]
     Hdc = data.columns[1:].to_numpy(dtype=float)
     Hdc = np.linspace(Hdc[0],Hdc[-1],axis_resolution)
+    Hdc = np.array([0] + Hdc.tolist())
 
     factor_x = s21_array.shape[0] // axis_resolution
     factor_y = s21_array.shape[1] // axis_resolution
     reduced = block_reduce(s21_array, (factor_x, factor_y), np.mean)
-    # freq = fft2(s21_array)
-    # freq_cropped = freq[:axis_resolution, :axis_resolution]  # Crop high frequencies
-    # arr_reduced = np.abs(ifft2(freq_cropped))
+    reduced = reduced[:axis_resolution,:axis_resolution] # reduce size 251 to 250
+    full_array = np.concatenate((freq[:,np.newaxis], reduced), axis=1)
+    full_array = np.concatenate((Hdc[np.newaxis,:], full_array), axis=0)
 
-    plt.pcolormesh(reduced, cmap='jet')
-    plt.show()
+    df = pandas.DataFrame(full_array)
+    df.to_csv(os.path.join(target_dir,filename), index=False, header=False)
