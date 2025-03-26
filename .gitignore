@@ -3,12 +3,18 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# excluding cst files
-simulations/
 presentations/
-references/
+data/
+simulations/
+.gitold/
+# exclude data files
+# simulations/*
+# include cst/aedt files
+# !simulations/*.cst
+# !simulations/*.aedt
+# references/
 tutorials/
-job_outputs/
+# job_outputs/
 
 # job scehduler
 # starter.sh
@@ -36,19 +42,19 @@ share/python-wheels/
 *.egg
 MANIFEST
 
-matrix method/misc.ipynb
+# matrix method/misc.ipynb
 
 legacy code/
 
-data/
-results/fitted/
-results/sim_recheck/
-results/lone_yig_sweep/
-results/yig_t_sweep_plots/
-paper writing/
-images/
-nonlinear model/
-g vs t/
+# data/
+# results/fitted/
+# results/sim_recheck/
+# results/lone_yig_sweep/
+# results/yig_t_sweep_plots/
+# paper writing/
+# images/
+# nonlinear model/
+# g vs t/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
