@@ -10,10 +10,10 @@ rank = comm.Get_rank()
 
 observation_data_file_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data','yig_t_sweep_outputs')# 'yig_t_0.06.csv')
 
-observation_data_files = [f for f in os.listdir(observation_data_file_dir) if f.endswith('.csv')]
+observation_data_files = [os.path.join(observation_data_file_dir,f) for f in os.listdir(observation_data_file_dir) if f.endswith('.csv')]
 observation_data_files.sort()
 
-observation_data = pandas.read_csv(observation_data_files[rank+1],header=None).to_numpy()
+observation_data = pandas.read_csv(observation_data_files[rank],header=None).to_numpy()
 observation_s21 = observation_data[1:,1:]
 
 hdc = np.linspace(observation_data[0,1], observation_data[0,-1], observation_data.shape[1]-1)
