@@ -1,9 +1,9 @@
 #!/bin/bash
-#SBATCH -N 2
+#SBATCH -N 1
 #SBATCH --job-name=matrics
 #SBATCH --output=output_%j.out
 #SBATCH --time=4-00:00:00
-#SBATCH --ntasks=80
+#SBATCH --ntasks=7
 #SBATCH -A physics_engg
 #SBATCH --mail-user=fizaan.khan.phy21@iitbhu.ac.in
 #SBATCH --partition=cpu
@@ -27,7 +27,7 @@ source ~/.bashrc
 
 cd matrix\ method
 
-time mpiexec.hydra -genv I_MPI_DEBUG 9 -n $SLURM_NTASKS -genv OMP_NUM_THREADS 40 /scratch/fizaank.phy21.iitbhu/anaconda3/bin/python main.py
+time mpiexec.hydra -genv I_MPI_DEBUG 9 -n $SLURM_NTASKS -genv OMP_NUM_THREADS 40 /scratch/fizaank.phy21.iitbhu/anaconda3/bin/python optimise.py
 
 mv output_$SLURM_JOB_ID.out $WORKDIR/output.out
 mv *.npy $WORKDIR
