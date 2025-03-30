@@ -37,3 +37,4 @@ bounds = [(0, None), (0, None), (0, None), (0, None), (0, None), (0, None), (0, 
 res = minimize(loss, init_guess, method='L-BFGS-B', bounds=bounds)
 print(observation_data_files[rank+1],":")
 print(res.x)
+print("fun:", res.fun)
