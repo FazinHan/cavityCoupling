@@ -12,6 +12,14 @@ slurm_job_id = os.environ.get('SLURM_JOB_ID')
 
 observation_data_file_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data','yig_t_sweep_outputs')# 'yig_t_0.06.csv')
 
+gs = np.array([[.15,0],
+               [.15,.07],
+               [.15,.1],
+               [.15,.13],
+               [.13,.16],
+               [.15,.175],
+               [.14,.18],])
+
 if rank != 0:
 
     observation_data_files = [os.path.join(observation_data_file_dir,f) for f in os.listdir(observation_data_file_dir) if f.endswith('.csv')]
@@ -27,17 +35,17 @@ if rank != 0:
 
     def loss(params):
         gamma_1, gamma_2, gamma_r, alpha_1, alpha_2, alpha_r, g1, g2 = params
-        s21_arr = np.array([[s21(w, h, gamma_1=gamma_1, gamma_2=gamma_2, gamma_r=gamma_r, alpha_1=alpha_1, alpha_2=alpha_2, alpha_r=alpha_r, g1=g1, g2=g2)[0,0] for h in hdc] for w in freq])
+        s21_arr = np.array([[s21(w, h, gamma_1=gamma_1, gamma_2=gamma_2, gamma_r=gamma_r, alpha_1=alpha_1, alpha_2=alpha_2, alpha_r=alpha_r, g1=gs[rank-1,0], g2=gs[rank-1,1])[0,0] for h in hdc] for w in freq])
         return np.sum(np.abs(s21_arr + observation_s21))
 
-    init_guess = [0.0001, 0.008, 0.02, 1e-2, 1e-5, 1e-4, 0.1, 0.1]
+    init_guess = [0.0001, 0.008, 0.02, 1e-2, 1e-5, 1e-4]#,.1,.1]
 
     # print(s21(freq[0], hdc[0], gamma_1=0.0001, gamma_2=0.008, gamma_r=0.02))
     # import time; t0 = time.time()
     # print(loss([0.0001, 0.008, 0.02, 0, 0, 0, 0.1, 0.1]))
     # print(f"time taken: {time.time() - t0:.2f} seconds")
 
-    bounds = [(0, None), (0, None), (0, None), (0, None), (0, None), (0, None), (0, None), (0, None)]
+    bounds = [(0, None), (0, None), (0, None), (0, None), (0, None), (0, None)]#, (0, None), (0, None)]
     res = minimize(loss, init_guess, method='L-BFGS-B', bounds=bounds)
     print(observation_data_files[rank-1],":")
     print(res.x)
