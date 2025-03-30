@@ -29,8 +29,8 @@ cd matrix\ method
 
 time mpiexec.hydra -genv I_MPI_DEBUG 9 -n $SLURM_NTASKS -genv OMP_NUM_THREADS 40 /scratch/fizaank.phy21.iitbhu/anaconda3/bin/python optimise.py
 
-mv output_$SLURM_JOB_ID.out $WORKDIR/output.out
-mv *.npy $WORKDIR
-mv *.png $WORKDIR
+mv output_$SLURM_JOB_ID.out "$WORKDIR/output.out"
+mv *.npy "$WORKDIR"
+mv *.png "$WORKDIR"
 
 echo "========= Job finished at `date` =========="
