@@ -3,7 +3,7 @@
 #SBATCH --job-name=matrics
 #SBATCH --output=output_%j.out
 #SBATCH --time=4-00:00:00
-#SBATCH --ntasks=7
+#SBATCH --ntasks=8
 #SBATCH -A physics_engg
 #SBATCH --mail-user=fizaan.khan.phy21@iitbhu.ac.in
 #SBATCH --partition=cpu
@@ -32,5 +32,6 @@ time mpiexec.hydra -genv I_MPI_DEBUG 9 -n $SLURM_NTASKS -genv OMP_NUM_THREADS 40
 mv output_$SLURM_JOB_ID.out "$WORKDIR/output.out"
 mv *.npy "$WORKDIR"
 mv *.png "$WORKDIR"
+mv *$SLURM_JOB_ID.csv "$WORKDIR"
 
 echo "========= Job finished at `date` =========="

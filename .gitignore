@@ -7,6 +7,7 @@ presentations/
 data/
 simulations/
 .gitold/
+matrix\ method/1*
 # exclude data files
 # simulations/*
 # include cst/aedt files
