@@ -35,4 +35,4 @@ init_guess = [0.0001, 0.008, 0.02, 1e-2, 1e-5, 1e-4, 0.1, 0.1]
 
 res = minimize(loss, init_guess, method='BFGS')
 print(observation_data_files[rank+1],":")
-print(res)
+print(res.x)
