@@ -34,7 +34,7 @@ if rank != 0:
     # print(hdc)
 
     def loss(params):
-        gamma_1, gamma_2, gamma_r, alpha_1, alpha_2, alpha_r, g1, g2 = params
+        gamma_1, gamma_2, gamma_r, alpha_1, alpha_2, alpha_r = params
         s21_arr = np.array([[s21(w, h, gamma_1=gamma_1, gamma_2=gamma_2, gamma_r=gamma_r, alpha_1=alpha_1, alpha_2=alpha_2, alpha_r=alpha_r, g1=gs[rank-1,0], g2=gs[rank-1,1])[0,0] for h in hdc] for w in freq])
         return np.sum(np.abs(s21_arr + observation_s21))
 
