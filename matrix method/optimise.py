@@ -38,7 +38,7 @@ if rank != 0:
         s21_arr = np.array([[s21(w, h, gamma_1=gamma_1, gamma_2=gamma_2, gamma_r=gamma_r, alpha_1=alpha_1, alpha_2=alpha_2, alpha_r=alpha_r, g1=gs[rank-1,0], g2=gs[rank-1,1])[0,0] for h in hdc] for w in freq])
         return np.sum(np.abs(s21_arr + observation_s21))
 
-    init_guess = [0.0001, 0.008, 0.02, 1e-2, 1e-5, 1e-4]#,.1,.1]
+    init_guess = [0.1, 0.1, 0.1, 1e-2, 1e-5, 1e-4]#,.1,.1]
 
     # print(s21(freq[0], hdc[0], gamma_1=0.0001, gamma_2=0.008, gamma_r=0.02))
     # import time; t0 = time.time()
@@ -47,7 +47,7 @@ if rank != 0:
 
     bounds = [(0, None), (0, None), (0, None), (0, None), (0, None), (0, None)]#, (0, None), (0, None)]
     res = minimize(loss, init_guess, method='L-BFGS-B', bounds=bounds)
-    print(observation_data_files[rank-1],":")
+    print(os.path.basename(observation_data_files[rank-1]),":")
     print(res.x)
     print("fun:", res.fun)
 
@@ -56,7 +56,7 @@ if rank != 0:
 if rank==0:
     headers = [f for f in os.listdir(observation_data_file_dir) if f.endswith('.csv')]
     params = np.zeros((len(headers), 8))
-    for i in range(1, comm.Get_size()+1):
+    for i in range(1, comm.Get_size()):
         comm.Recv(params[i-1], source=i, tag=i)
     df = pandas.DataFrame(params, columns=['gamma_1', 'gamma_2', 'gamma_r', 'alpha_1', 'alpha_2', 'alpha_r', 'g1', 'g2'], index=headers)
     df.to_csv(os.path.join(os.path.dirname(__file__), f'optimised_params_{slurm_job_id}.csv'))
