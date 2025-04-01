@@ -93,6 +93,7 @@ def extract_data(file_path):
     H_params = np.array(H_params)
     s21 = np.array(s21).T  # Convert S21 to a 2D array (transpose for correct dimensions)
 
+    s21 = (s21 - s21.min(axis=0)) / (s21.max(axis=0) - s21.min(axis=0))
     return frequency, H_params, s21
 
 def sorter(H_params, s21):
