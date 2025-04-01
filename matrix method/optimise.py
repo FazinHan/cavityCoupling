@@ -45,7 +45,7 @@ if rank != 0:
     # print(loss([0.0001, 0.008, 0.02, 0, 0, 0, 0.1, 0.1]))
     # print(f"time taken: {time.time() - t0:.2f} seconds")
 
-    bounds = [(0, None), (0, None), (0, None), (0, None), (0, None), (0, None)]#, (0, None), (0, None)]
+    bounds = [(1e-2, None), (1e-2, None), (1e-2, None), (0, None), (0, None), (0, None)]#, (0, None), (0, None)]
     res = minimize(loss, init_guess, method='L-BFGS-B', bounds=bounds)
     print(os.path.basename(observation_data_files[rank-1]),":")
     print(res.x)
