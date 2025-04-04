@@ -7,7 +7,8 @@ import csv
 
 # Define the file path again
 # file_path = "data\\raw\\yig 5 and 100um.txt";yes=0
-file_path = "data\\raw\\yig_t_sweep_final.txt";yes=1
+file_path = "data\\raw\\yig lone t sweep.txt";yes=0
+# file_path = "data\\raw\\yig_t_sweep_final.txt";yes=1
 
 # Reinitialize datasets storage
 datasets = {}
@@ -60,7 +61,7 @@ output_paths = []
 for yig_t, data_list in datasets.items():
     combined_df = pd.concat(data_list, ignore_index=True)
 
-    output_path = f"data\\yig_t_sweep_new\\yig_t_{yig_t-.02*yes:.3f}.csv"
+    output_path = f"data\\lone_t_sweep_yig\\yig_t_{yig_t-.02*yes:.3f}.csv"
     
     pt = combined_df.pivot(index='Frequency', columns='Hdc', values='S21')
     pt.dropna(inplace=True)
