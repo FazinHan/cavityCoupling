@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 import os, sys
 # from statsmodels.nonparametric.smoothers_lowess import lowess
 
-file_path = sys.argv[1]
+# file_path = sys.argv[1]
+file_path = "C:\\Users\\freak\\Documents\\core\\Projects\\cavityCoupling\\data\\raw\\just py.txt"
 # file_path = os.path.join('data','raw',file_name)
 # file_path = "m=4 to.txt"
 
@@ -93,7 +94,8 @@ def extract_data(file_path):
     H_params = np.array(H_params)
     s21 = np.array(s21).T  # Convert S21 to a 2D array (transpose for correct dimensions)
 
-    s21 = (s21 - s21.min(axis=0)) / (s21.max(axis=0) - s21.min(axis=0))
+    s21 = (s21 - s21.min(axis=0)) / (s21.max(axis=0) - s21.min(axis=0)) ## NORMALISE
+
     return frequency, H_params, s21
 
 def sorter(H_params, s21):
@@ -123,7 +125,7 @@ if __name__=="__main__":
     plt.title(f'|$S_{{21}}$| for {name}')
     plt.xlabel('Hdc (Oe)')
     plt.ylabel('Frequency (GHz)')
-    plt.ylim(4.3,6.3)
+    # plt.ylim(4.3,6.3)
     plt.tight_layout()
-    plt.savefig(os.path.join('results',f'{name}.png'))
+    plt.savefig(os.path.join('images',f'{name}.png'))
     # plt.show()
