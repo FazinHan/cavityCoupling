@@ -125,21 +125,34 @@ g2_fit_vals = g2_model.predict(t.reshape(-1, 1))
 r2_g2 = g2_model.score(t.reshape(-1, 1), g2)
 
 # g1 data and fit
-plt.scatter(t, g1, color='blue', label='g1 data')
-plt.plot(t, g1_fit_vals, 'b--', label=f'g1 fit: y = {g1_model.coef_[0]:.2f}x + {g1_model.intercept_:.2f} (R^2 = {r2_g1:.2f})')
+plt.scatter(t, g1, color='blue', label='$g_{Py}$ data')
+plt.plot(t, g1_fit_vals, 'b--', label=f'$g_{{Py}}$ fit: y = {g1_model.coef_[0]:.2f}x + {g1_model.intercept_:.2f} (R^2 = {r2_g1:.2f})')
 
-# g2 data and fit
-plt.scatter(t, g2, color='red', label='g2 data')
-plt.plot(t, g2_fit_vals, 'r--', label=f'g2 fit: y = {g2_model.coef_[0]:.2f}x + {g2_model.intercept_:.2f} (R^2 = {r2_g2:.2f})')
-# plt.plot(t_fit, g2_fit_plot, 'r--', label=f'g2 fit: y = {params_g2[0]:.2f} * (1 - exp(-{params_g2[1]:.2f} * x)) + {params_g2[2]:.2f}')
-
-# Customize plot
 plt.xlabel('t',fontsize=16)
-plt.ylabel('g values',fontsize=16)
+plt.ylabel('$g_{Py}$ values',fontsize=16)
 plt.tick_params(axis='both', which='major', labelsize=15)
 plt.tick_params(axis='both', which='minor', labelsize=8)
 # plt.title(f'Saturation Fits for g1 and g2 (R^2: g1 = {r2_g1:.2f}, g2 = {r2_g2:.2f})')
 plt.legend()
 # plt.grid()
 # plt.show()
-plt.savefig('images\\g_vs_t.png', dpi=300, bbox_inches='tight')
+plt.savefig('tentative\\images\\gpy_vs_t.png', dpi=300, bbox_inches='tight')
+plt.close()
+
+plt.figure(figsize=(9, 6))
+
+# g2 data and fit
+plt.scatter(t, g2, color='red', label='$g_{YIG}$ data')
+plt.plot(t, g2_fit_vals, 'r--', label=f'$g_{{YIG}}$ fit: y = {g2_model.coef_[0]:.2f}x + {g2_model.intercept_:.2f} (R^2 = {r2_g2:.2f})')
+# plt.plot(t_fit, g2_fit_plot, 'r--', label=f'g2 fit: y = {params_g2[0]:.2f} * (1 - exp(-{params_g2[1]:.2f} * x)) + {params_g2[2]:.2f}')
+
+# Customize plot
+plt.xlabel('t',fontsize=16)
+plt.ylabel('$g_{YIG}$ values',fontsize=16)
+plt.tick_params(axis='both', which='major', labelsize=15)
+plt.tick_params(axis='both', which='minor', labelsize=8)
+# plt.title(f'Saturation Fits for g1 and g2 (R^2: g1 = {r2_g1:.2f}, g2 = {r2_g2:.2f})')
+plt.legend()
+# plt.grid()
+# plt.show()
+plt.savefig('tentative\\images\\gyig_vs_t.png', dpi=300, bbox_inches='tight')
