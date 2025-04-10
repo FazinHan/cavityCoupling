@@ -7,7 +7,8 @@ import csv
 csv_files = []
 
 # List of CSV file paths
-data_dir = os.path.join("data","yig_t_sweep_outputs")
+# data_dir = os.path.join("data","yig_t_sweep_outputs")
+data_dir = os.path.join("data","lone_t_sweep_yig")
     # if dirs == ['intermediaries', 'peaks_widths']:
         # csv_files = [os.path.join(roots, file) for file in files if file.endswith('.csv')]# if dirs == ['intermediaries', 'peaks_widths']]
 csv_files = [os.path.join(data_dir, file) for file in os.listdir(data_dir) if file.endswith('.csv')]# if dirs == ['intermediaries', 'peaks_widths']]
@@ -39,6 +40,7 @@ for file in csv_files:
     # plt.xlim(1000,1600)
     plt.grid(True, linestyle='--', alpha=0.5)
     plt.tight_layout()
-    os.makedirs(os.path.join("results","normalised"), exist_ok=True)
-    plt.savefig(os.path.join("results","normalised",f"yig_t_sweep_{int(float(yig_t_value)*1e3)}um.png"))
+    directory = os.path.join("results","lone_t_sweep","normalised")
+    os.makedirs(directory, exist_ok=True)
+    plt.savefig(os.path.join(directory,f"yig_t_sweep_{int(float(yig_t_value)*1e3)}um.png"))
     print(f"Plot saved for yig_t={yig_t_value}mm")

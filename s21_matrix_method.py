@@ -29,4 +29,10 @@ def s21(w, H, **kwargs):
     M = np.array([[w-tomega_1,-g1+1j*np.sqrt(gamma_1*gamma_r),1j*np.sqrt(gamma_1*gamma_2)],[-g1+1j*np.sqrt(gamma_1*gamma_r),w-tomega_r,-g2+1j*np.sqrt(gamma_2*gamma_r)],[1j*np.sqrt(gamma_1*gamma_2),-g2+1j*np.sqrt(gamma_2*gamma_r),w-tomega_2]]) * 1j
     B = np.array([[np.sqrt(gamma_1), np.sqrt(gamma_r), np.sqrt(gamma_2)]]).T * np.sqrt(2)
 
-    return B.T @ np.linalg.inv(M) @ B
+    return np.abs(B.T @ np.linalg.inv(M) @ B)[0,0]
+
+if __name__ == "__main__":
+    w = 1
+    H = 150
+    result = s21(w, H)#, gyro1=2.94e-3, gyro2=1.76e-2/2/np.pi, M1=10900, M2=1750, gamma_1=.0001, gamma_2=.008, gamma_r=.02, alpha_1=0, alpha_2=0, alpha_r=0, omega_r=5.3, g1=.1, g2=.1)
+    print(result)

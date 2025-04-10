@@ -15,6 +15,7 @@ matrix\ method/1*
 # !simulations/*.aedt
 # references/
 tutorials/
+tentative/
 # job_outputs/
 
 # job scehduler
