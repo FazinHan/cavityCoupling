@@ -44,6 +44,6 @@ plt.plot(t_fit, g2_log_fit, label=f'g2 log fit: a={round(params_log_g2[0],3)} b=
 plt.xlabel('t ($\\mu$m)')
 plt.ylabel('g values (arb. units)')
 plt.title('g1 and g2 vs t with logarithmic fits')
-plt.legend()
+plt.legend(fontsize=15)
 plt.tight_layout()
 plt.savefig("g vs t.png")
