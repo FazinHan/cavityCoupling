@@ -142,7 +142,7 @@ plt.close()
 plt.figure(figsize=(9, 6))
 
 # g2 data and fit
-plt.scatter(t, g2, color='r', label='$g_{YIG}$ data')
+plt.scatter(t, g2, color='r', label='$g_{YIG}$ data (Py present)')
 plt.plot(t, g2_fit_vals, 'b-', label=f'$g_{{YIG}} = {g2_model.coef_[0]:.2f}t + {g2_model.intercept_:.2f}$')# (R^2 = {r2_g2:.2f})$')
 # plt.plot(t_fit, g2_fit_plot, 'r--', label=f'g2 fit: y = {params_g2[0]:.2f} * (1 - exp(-{params_g2[1]:.2f} * x)) + {params_g2[2]:.2f}')
 

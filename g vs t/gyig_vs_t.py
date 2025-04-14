@@ -7,10 +7,10 @@ import pandas as pd
 root = os.path.join(os.getcwd(),"data","lone_t_sweep_yig")
 # J_values = np.linspace(0.09, 0.237, 7)
 file_path = 'g_yig_vs_t.csv'
-data = pd.read_csv(file_path)
+data = pd.read_csv(file_path,header=None)
 
-t_values = data['t']
-J_values = data['g']
+t_values = data[0]
+J_values = data[1]
 
 # Fit the data to a line
 
@@ -23,8 +23,8 @@ plt.figure(figsize=(9, 6))
 # Plot the fitted line
 t_fit = np.linspace(min(t_values), max(t_values), 100)
 J_fit = slope * t_fit + intercept
-plt.plot(t_values, J_values[:len(t_values)], 'ro', label='Data')
-plt.plot(t_fit, J_fit, 'b-', label=f'$g_{{YIG}}$ = {slope:.3f}t + {intercept:.3f}')
+plt.plot(t_values, J_values[:len(t_values)], 'ro', label='$g_{YIG}$ data (Py absent)')
+plt.plot(t_fit, J_fit, 'b-', label=f'$g_{{YIG}} = {slope:.3f}t {'+'*(int(intercept>=0))} {intercept:.3f}$')
 # for roots,dirs,files in os.walk(root):
 #     # file_path_full = os.path.join(root,f"{type}.csv")
 #     idx = 0
