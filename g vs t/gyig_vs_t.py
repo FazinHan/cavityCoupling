@@ -23,8 +23,8 @@ plt.figure(figsize=(9, 6))
 # Plot the fitted line
 t_fit = np.linspace(min(t_values), max(t_values), 100)
 J_fit = slope * t_fit + intercept
-plt.plot(t_values, J_values[:len(t_values)], 'ro', label='$g_{YIG}$ data (Py absent)')
-plt.plot(t_fit, J_fit, 'b-', label=f'$g_{{YIG}} = {slope:.3f}t {'+'*(int(intercept>=0))} {intercept:.3f}$')
+plt.plot(t_values, J_values[:len(t_values)], 'bx', label='$g_{YIG}$ data (Py absent)',markersize=15)
+plt.plot(t_fit, J_fit, 'b-', label=f'$g_{{YIG}} = {slope:.3f}t {'+'*(int(intercept>=0))} {intercept:.3f}$',markersize=15)
 # for roots,dirs,files in os.walk(root):
 #     # file_path_full = os.path.join(root,f"{type}.csv")
 #     idx = 0
@@ -41,7 +41,7 @@ plt.legend(fontsize=15)
 plt.xlabel('t',fontsize=16)
 plt.ylabel('$g_{YIG}$',fontsize=16)
 # plt.grid()
-plt.tick_params(axis='both', which='major', labelsize=15)
-plt.tick_params(axis='both', which='minor', labelsize=8)
+plt.tick_params(axis='both', which='major', labelsize=15, direction='in')
+plt.tick_params(axis='both', which='minor', labelsize=8, direction='in')
 plt.tight_layout()
 plt.savefig('tentative\\images\\Jvst.png',dpi=300, bbox_inches='tight')
