@@ -147,9 +147,9 @@ plt.plot(t, g2_fit_vals, 'b-', label=f'$g_{{YIG}} = {g2_model.coef_[0]:.2f}t + {
 # plt.plot(t_fit, g2_fit_plot, 'r--', label=f'g2 fit: y = {params_g2[0]:.2f} * (1 - exp(-{params_g2[1]:.2f} * x)) + {params_g2[2]:.2f}')
 
 # Customize plot
-plt.xlabel('t',fontsize=16)
-plt.ylabel('$g$',fontsize=16)
-plt.tick_params(axis='both', which='major', labelsize=15, direction='in')
+plt.xlabel('t',fontsize=20)
+plt.ylabel('$g$',fontsize=20)
+plt.tick_params(axis='both', which='major', labelsize=20, direction='in')
 plt.tick_params(axis='both', which='minor', labelsize=8, direction='in')
 # plt.title(f'Saturation Fits for g1 and g2 (R^2: g1 = {r2_g1:.2f}, g2 = {r2_g2:.2f})')
 plt.legend(fontsize=15)
