@@ -12,11 +12,13 @@ data = pd.read_csv(filename)
 t = data['t'].values
 g1 = data['g1'].values
 g2 = data['g2'].values
+g3 = data['g3'].values
 
 if t[0]== 0:
     t = t[1:]
     g1 = g1[1:]
     g2 = g2[1:]
+    g3 = g3[1:]
 
 # # Define power law model: y = a * x^b + c
 # def power_law_model(x, a, c):
@@ -124,9 +126,14 @@ g2_fit_vals = g2_model.predict(t.reshape(-1, 1))
 # Calculate R^2 for g2
 r2_g2 = g2_model.score(t.reshape(-1, 1), g2)
 
+g3_model = LinearRegression()
+g3_model.fit(t.reshape(-1, 1), g3)
+g3_fit_vals = g3_model.predict(t.reshape(-1, 1))
+r2_g3 = g3_model.score(t.reshape(-1, 1), g3)
+
 # g1 data and fit
 plt.plot(t, g1, 'ro', label='$g_{Py}$ data',markersize=15)
-plt.plot(t, g1_fit_vals, 'r-', label=f'$g_{{Py}} = {g1_model.coef_[0]:.2f}t + {g1_model.intercept_:.2f}$')# (R^2 = {r2_g1:.2f})$')
+plt.plot(t, g1_fit_vals, 'r-', label=f'$g_{{\\text{{Py}}}} = {g1_model.coef_[0]:.2f}t + {g1_model.intercept_:.2f}$')# (R^2 = {r2_g1:.2f})$')
 
 # plt.xlabel('t',fontsize=16)
 # plt.ylabel('$g_{Py}$',fontsize=16)
@@ -143,8 +150,11 @@ plt.plot(t, g1_fit_vals, 'r-', label=f'$g_{{Py}} = {g1_model.coef_[0]:.2f}t + {g
 
 # g2 data and fit
 plt.plot(t, g2, 'bx', label='$g_{YIG}$ data (Py present)',markersize=15)
-plt.plot(t, g2_fit_vals, 'b-', label=f'$g_{{YIG}} = {g2_model.coef_[0]:.2f}t + {g2_model.intercept_:.2f}$')# (R^2 = {r2_g2:.2f})$')
+plt.plot(t, g2_fit_vals, 'b-', label=f'$g_{{\\text{{YIG}}}} = {g2_model.coef_[0]:.2f}t + {g2_model.intercept_:.2f}$')# (R^2 = {r2_g2:.2f})$')
 # plt.plot(t_fit, g2_fit_plot, 'r--', label=f'g2 fit: y = {params_g2[0]:.2f} * (1 - exp(-{params_g2[1]:.2f} * x)) + {params_g2[2]:.2f}')
+
+plt.plot(t, g3, 'y^', label='$g_{YIG}$ data (Py absent)',markersize=15)
+plt.plot(t, g3_fit_vals, 'y-', label=f'$g_{{\\text{{int}}}} = {g3_model.coef_[0]:.2f}t + {g3_model.intercept_:.2f}$')# (R^2 = {r2_g3:.2f})$')
 
 # Customize plot
 plt.xlabel('t',fontsize=20)
@@ -152,7 +162,7 @@ plt.ylabel('$g$',fontsize=20)
 plt.tick_params(axis='both', which='major', labelsize=20, direction='in')
 plt.tick_params(axis='both', which='minor', labelsize=8, direction='in')
 # plt.title(f'Saturation Fits for g1 and g2 (R^2: g1 = {r2_g1:.2f}, g2 = {r2_g2:.2f})')
-plt.legend(fontsize=15)
+# plt.legend(fontsize=15)
 # plt.grid()
 # plt.show()
 plt.savefig('tentative\\images\\g1g2_vs_t.png', dpi=300, bbox_inches='tight')

@@ -35,7 +35,7 @@ plt.plot(t_fit, J_fit, 'b-', label=f'$g_{{YIG}} = {slope:.3f}t {'+'*(int(interce
 #             idx += 1
 
 
-plt.legend(fontsize=15)
+# plt.legend(fontsize=15)
 
 # plt.title('$g_{YIG}$ vs t')
 plt.xlabel('t',fontsize=20)
