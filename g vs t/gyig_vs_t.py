@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from scipy.stats import linregress
 import numpy as np
 import pandas as pd
+import sys
 
 root = os.path.join(os.getcwd(),"data","lone_t_sweep_yig")
 # J_values = np.linspace(0.09, 0.237, 7)
@@ -38,8 +39,8 @@ plt.plot(t_fit, J_fit, 'b-', label=f'$g_{{YIG}} = {slope:.3f}t {'+'*(int(interce
 # plt.legend(fontsize=15)
 
 # plt.title('$g_{YIG}$ vs t')
-plt.xlabel('t',fontsize=20)
-plt.ylabel('$g_{YIG}$',fontsize=20)
+plt.xlabel('t',fontsize=sys.argv[1])
+plt.ylabel('$g_2$',fontsize=sys.argv[1])
 # plt.grid()
 plt.tick_params(axis='both', which='major', labelsize=20, direction='in')
 plt.tick_params(axis='both', which='minor', labelsize=8, direction='in')

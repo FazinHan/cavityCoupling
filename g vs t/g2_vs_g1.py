@@ -1,3 +1,4 @@
+import sys
 import numpy as np
 import pandas as pd
 from scipy.stats import linregress
@@ -25,8 +26,8 @@ plt.figure(figsize=(9, 6))
 
 plt.plot(g2,g1,'go',markersize=16,label='Data')
 plt.plot(g2, slope * g2 + intercept, 'g-', label=f'Fit: $g_{{Py}} = {slope:.2f} g_{{YIG}} + {intercept:.2f}$')
-plt.xlabel("$g_{YIG}$",fontsize=20)
-plt.ylabel("$g_{Py}$",fontsize=20)
+plt.xlabel("$g_2$",fontsize=sys.argv[1])
+plt.ylabel("$g_1$",fontsize=sys.argv[1])
 plt.tick_params(axis='both', which='major', labelsize=20, direction='in')
 plt.tick_params(axis='both', which='minor', labelsize=8, direction='in')
 # plt.legend(fontsize=12)

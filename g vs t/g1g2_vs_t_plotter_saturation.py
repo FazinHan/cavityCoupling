@@ -1,3 +1,4 @@
+import sys
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -157,8 +158,8 @@ plt.plot(t, g3, 'y^', label='$g_{YIG}$ data (Py absent)',markersize=15)
 plt.plot(t, g3_fit_vals, 'y-', label=f'$g_{{\\text{{int}}}} = {g3_model.coef_[0]:.2f}t + {g3_model.intercept_:.2f}$')# (R^2 = {r2_g3:.2f})$')
 
 # Customize plot
-plt.xlabel('t',fontsize=20)
-plt.ylabel('$g$',fontsize=20)
+plt.xlabel('t',fontsize=sys.argv[1])
+plt.ylabel('$g$',fontsize=sys.argv[1])
 plt.tick_params(axis='both', which='major', labelsize=20, direction='in')
 plt.tick_params(axis='both', which='minor', labelsize=8, direction='in')
 # plt.title(f'Saturation Fits for g1 and g2 (R^2: g1 = {r2_g1:.2f}, g2 = {r2_g2:.2f})')
