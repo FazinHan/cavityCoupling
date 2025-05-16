@@ -17,7 +17,9 @@ g2 = data['g2'].values
 slope, intercept, r_value, p_value, std_err = linregress(g2, g1)
 
 # Print the fit parameters
+print("Fit parameters for g1 vs g2:")
 print(f"Slope: {slope}, Intercept: {intercept}, R-squared: {r_value**2}")
+print()
 
 # Plot the fitted line
 

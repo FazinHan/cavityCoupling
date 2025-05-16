@@ -26,7 +26,12 @@ t_fit = np.linspace(min(t_values), max(t_values), 100)
 J_fit = slope * t_fit + intercept
 plt.plot(t_values, J_values[:len(t_values)], 'bx', label='$g_{YIG}$ data (Py absent)',markersize=15)
 plt.plot(t_fit, J_fit, 'b-', label=f'$g_{{YIG}} = {slope:.3f}t {'+'*(int(intercept>=0))} {intercept:.3f}$',markersize=15)
-# for roots,dirs,files in os.walk(root):
+
+# Print the slope and intercept of the fit
+print("Lone YIG fit:")
+print(f"Slope: {slope:.3f}")
+print(f"Intercept: {intercept:.3f}")
+print()
 #     # file_path_full = os.path.join(root,f"{type}.csv")
 #     idx = 0
 #     for _, file in enumerate(files):
