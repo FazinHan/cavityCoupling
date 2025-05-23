@@ -5,6 +5,9 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from sklearn.linear_model import LinearRegression
 
+fontsize = int(sys.argv[1])
+labelsize = fontsize + int(sys.argv[2])
+
 # Load data from CSV file
 filename = 'combined_plots_params.csv'
 data = pd.read_csv(filename)
@@ -76,11 +79,12 @@ print()
 
 # plt.plot(t, g3, 'y^', label='$g_{YIG}$ data (Py absent)',markersize=15)
 # plt.plot(t, g3_fit_vals, 'y-', label=f'$g_{{\\text{{int}}}} = {g3_model.coef_[0]:.2f}t + {g3_model.intercept_:.2f}$')# (R^2 = {r2_g3:.2f})$')
-
+# plt.xticks([.02,.06,.1])
+# plt.yticks([.05,.15,.25])
 # Customize plot
-plt.xlabel('t',fontsize=sys.argv[1])
-plt.ylabel('$g$',fontsize=sys.argv[1])
-plt.tick_params(axis='both', which='major', labelsize=20, direction='in')
+plt.xlabel('t',fontsize=labelsize)
+plt.ylabel('$g$',fontsize=labelsize)
+plt.tick_params(axis='both', which='major', labelsize=fontsize, direction='in')
 plt.tick_params(axis='both', which='minor', labelsize=8, direction='in')
 # plt.title(f'Saturation Fits for g1 and g2 (R^2: g1 = {r2_g1:.2f}, g2 = {r2_g2:.2f})')
 # plt.legend(fontsize=15)

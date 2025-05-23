@@ -5,6 +5,9 @@ import numpy as np
 import pandas as pd
 import sys
 
+fontsize = int(sys.argv[1])
+labelsize = fontsize + int(sys.argv[2])
+
 root = os.path.join(os.getcwd(),"data","lone_t_sweep_yig")
 # J_values = np.linspace(0.09, 0.237, 7)
 file_path = 'g_yig_vs_t.csv'
@@ -42,12 +45,13 @@ print()
 
 
 # plt.legend(fontsize=15)
-
+# plt.xticks([.02,.06,.1])
+# plt.yticks([.13,.2,.3])
 # plt.title('$g_{YIG}$ vs t')
-plt.xlabel('t',fontsize=sys.argv[1])
-plt.ylabel('$g_2$',fontsize=sys.argv[1])
+plt.xlabel('t',fontsize=labelsize)
+plt.ylabel('$g_2$',fontsize=labelsize)
 # plt.grid()
-plt.tick_params(axis='both', which='major', labelsize=20, direction='in')
+plt.tick_params(axis='both', which='major', labelsize=fontsize, direction='in')
 plt.tick_params(axis='both', which='minor', labelsize=8, direction='in')
 plt.tight_layout()
 plt.savefig('tentative\\images\\Jvst.png',dpi=300, bbox_inches='tight')

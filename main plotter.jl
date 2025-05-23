@@ -1,20 +1,84 @@
 # using QuantumCumulants
 # using OrdinaryDiffEq, ModelingToolkit
 ENV["MPLBACKEND"] = "qt5agg"
+using QuantumCumulants
+using OrdinaryDiffEq, ModelingToolkit
 using PyPlot
 using DelimitedFiles
 import LinearAlgebra as la
 using Statistics
 
-function main(type, optimized_params, lone=false)
+
+
+multiplier = 1
+M_1 = 10900
+M_2 = 1750
+# M_3 = 0.175
+y1 = 2.94e-3*multiplier
+y2 = 1.76e-2*multiplier/2/pi
+
+@cnumbers ω1 ω2 ωc g1 g2 g3 λ1 λ2 λc κ1 κ2 κc α1 α2 β  # 2-magnon, 2-photon
+@cnumbers Ω1 Ω2 Ωc 
+h1 = FockSpace(:cavity);h2 = FockSpace(:cavity);hc = FockSpace(:cavity)
+h=h1⊗h2⊗hc
+# Define the fundamental operators
+@qnumbers b1::Destroy(h,1) b2::Destroy(h,2) bc::Destroy(h,3)
+#            magnon PY       magnon YIG        resonator
+
+Ham = ω1*(1-im*α1)*(b1'*b1) + ω2*(1-im*α2)*(b2'*b2) + ωc*(1-im*β)*(bc'*bc) + g1*((b1'*bc)+(bc'*b1)) + g2*((bc'*b2)+(b2'*bc)) + Ω1*( b1'+b1) + Ω2*(b2'+b2) + Ωc*(bc'+bc) #+ g3*((b1'*b2)+(b2'*b1))
+# Collapse operators
+J = [b1,b2,bc]; rates = [λ1,λ2,λc]
+# Derive a set of equations
+ops = [b1,b2,bc]; eqs = meanfield(ops,Ham,J;rates=rates,order=1)
+
+# Complete equations
+eqs_completed = complete(eqs);
+@named sys = ODESystem(eqs_completed);
+display(sys)
+A = calculate_jacobian(sys); B=[eqs_completed[1].rhs.dict[Ω1] * Ω1; eqs_completed[2].rhs.dict[Ω2] * Ω2; eqs_completed[3].rhs.dict[Ωc] * Ωc];
+# Ainv=inv(A); X=Ainv*B; b1=X[1]; b2=X[2]; bc=X[3];
+
+function main_calc_real_part(Hlist,ωcn,g1n,g2n,g3n,λ1n,λ2n,λcn,α1n,α2n,βn, M_1=M_1, y1=y1,M_2_=M_2, y2_=y2)
+    ω2n = H -> y2_ * (H*(H+M_2_))^.5
+    ω1n = H -> y1 * (H*(H+M_1))^.5
+    # println("Running main_calc_real_part")
+    occupationList1 = Float64[]; occupationList2 = Float64[]; occupationList3 = Float64[];
+    for H in Hlist
+        # if H
+        An=substitute( A, Dict(ω1=>ω1n(H),ωc=>ωcn,ω2=>ω2n(H),g1=>g1n,g2=>g2n,g3=>g3n,λ1=>λ1n,λ2=>λ2n,λc=>λcn,α1=>α1n,α2=>α2n,β=>βn))
+        data0 = 1im .* An
+        data1 = la.eigen(data0)
+        datar=la.real(data1.values)
+        sort!(datar,rev=true)
+        # datar = filter(x -> x >= minimum(locs) && x <= maximum(locs), datar)
+        if length(datar) == 1
+            datar = [datar[1], datar[1], datar[1]]
+        elseif length(datar) == 0
+            # println(H)# = [datar[1], datar[1]]
+            datar = [ω2n, ω2n, ω2n]
+        elseif length(datar) == 2
+            datar = [datar[1], datar[2], datar[2]]
+        end
+        # println(size(datar))
+        # r1n=datar[1]; r2n=datar[2];# r3n=datar[3]; 
+        #print(An)
+        push!(occupationList1, datar[1]); push!(occupationList2, datar[2]); push!(occupationList3, datar[3]);
+    end
+    occupationList = [occupationList1 occupationList2 occupationList3]
+
+    return occupationList
+
+end
+
+function main(type, optimized_params)#, lone=false)
 
     println("Running main for $type")
 
     # type = "strong"
     root = joinpath(pwd(),"data","yig_t_sweep_new")
-    if lone
-        root = joinpath(pwd(),"data","lone_t_sweep_yig")
-    end
+    # if lone
+    #     root = joinpath(pwd(),"data","lone_t_sweep_yig")
+    # end
     # Read the CSV file into a DataFrame
     # file_path = joinpath(root,"strong_peaks_widths.csv")
     # file_path = joinpath(root, "peaks_widths", "$type"*"_peaks_widths.csv")
@@ -61,10 +125,10 @@ function main(type, optimized_params, lone=false)
     root = joinpath(pwd(),"results")
 
    
-    ωcn = optimized_params[1]
-    optimized_params = optimized_params[2:end]
+    # ωcn = optimized_params[1]
+    # optimized_params = optimized_params[2:end]
 
-    objective(params) = inter(Hlist, ωcn, params)
+    # objective(params) = inter(Hlist, ωcn, params)
 
     # # Perform the optimization
     # lower = [5.06, 0, 0]
@@ -76,12 +140,12 @@ function main(type, optimized_params, lone=false)
     # optimized_params = Optim.minimizer(result)
     # optimized_params = [0.05, 0.19]
 
-    println("Optimized parameters: ", ωcn, optimized_params)
+    println("Optimized parameters: ",  optimized_params)
     #Numerical calculations of dispersion spectra for case-1 (J > Γ)
 
-    # occupationList = main_calc_real_part(Hlist,ωcn,optimized_params...)
+    occupationList = main_calc_real_part(Hlist,optimized_params...)
 
-    return (Hlist, frequencies, s21)#, occupationList, optimized_params)
+    return (Hlist, frequencies, s21, occupationList)#, optimized_params)
 end
 
 function s21_theoretical(w, H, ωc, g1, g2, g3, alpha_1, alpha_2, lambda_1, lambda_2, lambda_r, beta)
@@ -145,7 +209,23 @@ function plot_multiple_calculations(params, save_file, plot_size=3, width_excess
     for (idx, file) in enumerate(files)
         param = params[file]
 
-        Hlist, frequencies, s21 = main(file, param)
+        if lone && idx != 3
+            M_1 = 10900
+            M_2 = 1500
+            # M_3 = 0.175
+            y1 = 2.94e-3
+            y2 = 1.76e-2/2/pi
+            if idx == 1
+                M_2 = .1
+                y2 = 1
+            elseif idx == 2
+                M_1 = 1e9
+            end
+            # occupationList = main_calc_real_part(Hlist,param...,M_2, y2)
+            param = vcat(param, [M_1, y1, M_2, y2])
+        end
+
+        Hlist, frequencies, s21, occupationList = main(file, param)
         # Hlist, frequencies, s21, occupationList, param = main(file, param)
 
         Hlist_old = Hlist
@@ -162,7 +242,11 @@ function plot_multiple_calculations(params, save_file, plot_size=3, width_excess
                     s21_theoretical_array[j,i] = s21_theoretical(frequencies[j],Hlist_old[i],ωcn,g1n,g2n,g3n,α1n,α2n,λ1n,λ2n,λcn,βn) # s21(frequencies[j], Hlist[i], gyro1=y1, gyro2=y2, M1=M_1, M2=M_2, g1=g1n, g2=g2n, λ1=λ1n, λ2=λ2n, λc=λcn, α1=α1n, α2=α2n, β=βn)
                 end
             end
+            ax = axes[2idx-1]
+        else
+            ax = axes[idx]
         end
+
         println(size(s21_theoretical_array))
 
         if theo || idx==1
@@ -172,22 +256,22 @@ function plot_multiple_calculations(params, save_file, plot_size=3, width_excess
         end
         
 
-        if theo
-            ax = axes[2idx-1]
-        else
-            ax = axes[idx]
-        end
         
         t = round(parse(Float64, split(file, "_")[3]), digits=3)
         tt = Int64(t*1e3)
 
         im = ax.pcolormesh(Hlist, frequencies, s21, cmap=:inferno_r)
+        
+        ax.plot(Hlist, occupationList[:,1], "w",alpha=.5)
+        ax.plot(Hlist, occupationList[:,2], "w",alpha=.5)
+        ax.plot(Hlist, occupationList[:,3], "w",alpha=.5)
+        ax.set_ylim(4.3,6.2)
 
         if theo
-            axes[2idx].pcolormesh(Hlist, frequencies, s21_theoretical_array, cmap=:inferno)  
-            # ax.plot(Hlist, occupationList[:,1], "w",alpha=.5)
-            # ax.plot(Hlist, occupationList[:,2], "w",alpha=.5)
-            # ax.plot(Hlist, occupationList[:,3], "w",alpha=.5)
+            axes[2idx].pcolormesh(Hlist, frequencies, s21_theoretical_array, cmap=:inferno)
+            ax.plot(Hlist, occupationList[:,1], "w",alpha=.5)
+            ax.plot(Hlist, occupationList[:,2], "w",alpha=.5)
+            ax.plot(Hlist, occupationList[:,3], "w",alpha=.5)
             ax.text(1150/conversion, 5.5, "t = $tt μm", color="white", fontsize=15, ha="right")
         end
         param = round.(param, digits=2)
@@ -255,11 +339,11 @@ params = Dict( # ωcn  g1n  g2n g3n λ1n  λ2n  λcn  α1  α2  β
 
 println("Threads allocated: ", Threads.nthreads())
 
-plot_multiple_calculations(params,"combined_plots.png")
+# plot_multiple_calculations(params,"combined_plots.png")
 
 params = Dict( # ωcn  g1n  g2n g3n λ1n  λ2n  λcn  α1  α2  β
              "yig_t_0.000" => [5.09, .11, 0.0, .001, .01, .01, .07, 2e-2, 1e-5, 1e-5],  
-             "yig_t_0.100_lone" => [5.2, .11, 0.0, .001, .01, .01, .07, 2e-2, 1e-5, 1e-5],  
+             "yig_t_0.100_lone" => [5.27, .0, 0.25, .001, .01, .01, .07, 2e-2, 1e-5, 1e-5],  
             #  "yig_t_0.005" => [5.06, .12, 0.04, .001, .01, .01, .07, 2e-2, 1e-5, 1e-5],  
             #  "yig_t_0.013" => [5.01, .13, 0.075, .001, .01, .01, .07, 2e-2, 1e-5, 1e-5], 
             #  "yig_t_0.027" => [5.01, .14, 0.12, .001, .01, .01, .07, 2e-2, 1e-5, 1e-5],  
@@ -271,4 +355,4 @@ params = Dict( # ωcn  g1n  g2n g3n λ1n  λ2n  λcn  α1  α2  β
 
 println("Threads allocated: ", Threads.nthreads())
 
-# plot_multiple_calculations(params,"combined_plots_isolate.png",3,.5,true,3,false)
+plot_multiple_calculations(params,"combined_plots_isolate.png",3,.5,true,3,false)
