@@ -206,6 +206,7 @@ function plot_multiple_calculations(params, save_file, plot_size=3, width_excess
 
     conversion = 1e3
 
+    images = []
     for (idx, file) in enumerate(files)
         param = params[file]
 
@@ -269,8 +270,9 @@ function plot_multiple_calculations(params, save_file, plot_size=3, width_excess
         t = round(parse(Float64, split(file, "_")[3]), digits=3)
         tt = Int64(t*1e3)
 
-        im = ax.pcolormesh(Hlist, frequencies, s21, cmap=:inferno_r)
-        
+        im = ax.pcolormesh(Hlist, frequencies, s21.-1, cmap=:inferno_r)
+        push!(images, im)
+
         ax.plot(Hlist, occupationList[:,1], "w",alpha=.5)
         ax.plot(Hlist, occupationList[:,2], "w",alpha=.5)
         ax.plot(Hlist, occupationList[:,3], "w",alpha=.5)
@@ -327,6 +329,18 @@ function plot_multiple_calculations(params, save_file, plot_size=3, width_excess
         axes[j].axis("off")
     end
 
+    if lone
+        asp = 25
+        padding = .1
+    else
+        asp = 20
+        padding = .02
+    end
+
+    cbar = fig.colorbar(mappable=images[1], ax=axes[1:end], orientation="vertical",aspect=asp,pad=padding)
+    cbar.set_label("\$S_{21}\$ (a.u.)", fontsize=12)
+    cbar.ax.tick_params(labelsize=12)  # Set colorbar tick label size
+
     # println(fig.tick_params)
 
     save_path = joinpath(pwd(),"tentative","images")
@@ -350,7 +364,7 @@ params = Dict( # ωcn  g1n  g2n g3n λ1n  λ2n  λcn  α1  α2  β
 
 println("Threads allocated: ", Threads.nthreads())
 
-plot_multiple_calculations(params,"combined_plots.png")
+plot_multiple_calculations(params,"combined_plots.png",3,1)
 
 params = Dict( # ωcn  g1n  g2n g3n λ1n  λ2n  λcn  α1  α2  β
              "yig_t_0.000" => [5.09, .11, 0.0, .001, .01, .01, .07, 2e-2, 1e-5, 1e-5],  
@@ -366,4 +380,4 @@ params = Dict( # ωcn  g1n  g2n g3n λ1n  λ2n  λcn  α1  α2  β
 
 println("Threads allocated: ", Threads.nthreads())
 
-plot_multiple_calculations(params,"combined_plots_isolate.png",3,.5,true,3,false)
+plot_multiple_calculations(params,"combined_plots_isolate.png",3,1,true,3,false)
