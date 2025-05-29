@@ -1,5 +1,6 @@
 # using QuantumCumulants
 # using OrdinaryDiffEq, ModelingToolkit
+ENV["PYTHON"] = "/home/fazinhan/miniconda3/envs/cavityCoupling/bin/python"
 ENV["MPLBACKEND"] = "qt5agg"
 using QuantumCumulants
 using OrdinaryDiffEq, ModelingToolkit
@@ -25,7 +26,7 @@ h=h1⊗h2⊗hc
 @qnumbers b1::Destroy(h,1) b2::Destroy(h,2) bc::Destroy(h,3)
 #            magnon PY       magnon YIG        resonator
 
-Ham = ω1*(1-im*α1)*(b1'*b1) + ω2*(1-im*α2)*(b2'*b2) + ωc*(1-im*β)*(bc'*bc) + g1*((b1'*bc)+(bc'*b1)) + g2*((bc'*b2)+(b2'*bc)) + Ω1*( b1'+b1) + Ω2*(b2'+b2) + Ωc*(bc'+bc) #+ g3*((b1'*b2)+(b2'*b1))
+Ham = ω1*(1-im*α1)*(b1'*b1) + ω2*(1-im*α2)*(b2'*b2) + ωc*(1-im*β)*(bc'*bc) + g1*((b1'*bc)+(bc'*b1)) + g2*((bc'*b2)+(b2'*bc)) + Ω1*( b1'+b1) + Ω2*(b2'+b2) + Ωc*(bc'+bc) + g3*((b1'*b2)+(b2'*b1))
 # Collapse operators
 J = [b1,b2,bc]; rates = [λ1,λ2,λc]
 # Derive a set of equations
@@ -209,17 +210,23 @@ function plot_multiple_calculations(params, save_file, plot_size=3, width_excess
     for (idx, file) in enumerate(files)
         param = params[file]
 
-        if lone && idx != 3
+        if lone
             M_1 = 10900
-            M_2 = 1500
+            M_2 = 1750
             # M_3 = 0.175
             y1 = 2.94e-3
             y2 = 1.76e-2/2/pi
             if idx == 1
-                M_2 = .1
+                # M_2 = .1
                 y2 = 1
             elseif idx == 2
                 M_1 = 1e9
+                M_2 = 1500
+                # println("M_1: ", M_1)
+            else
+                # y2 = 1.6e-2/2/pi
+                M_2 = 1650
+                # M_2 = 1750
             end
             # occupationList = main_calc_real_part(Hlist,param...,M_2, y2)
             param = vcat(param, [M_1, y1, M_2, y2])
@@ -255,8 +262,11 @@ function plot_multiple_calculations(params, save_file, plot_size=3, width_excess
             end
         end
         
+        if lone && idx == 3
+            ax.text(220/conversion, 5.0, "P1", color="white", fontsize=12, ha="left")
+            ax.text(1090/conversion, 4.96, "P2", color="white", fontsize=12, ha="left")
+        end
 
-        
         t = round(parse(Float64, split(file, "_")[3]), digits=3)
         tt = Int64(t*1e3)
 
@@ -320,7 +330,9 @@ function plot_multiple_calculations(params, save_file, plot_size=3, width_excess
 
     # println(fig.tick_params)
 
-    savefig("tentative\\images\\$save_file",dpi=300,bbox_inches="tight")  # Save the figure with a tight layout
+    save_path = joinpath(pwd(),"tentative","images")
+
+    savefig(joinpath(save_path,save_file),dpi=300,bbox_inches="tight")  # Save the figure with a tight layout
     # show()
     println("Saved figure to $save_file")
     close(fig)  # Close the figure if you don't want to display it
@@ -339,7 +351,7 @@ params = Dict( # ωcn  g1n  g2n g3n λ1n  λ2n  λcn  α1  α2  β
 
 println("Threads allocated: ", Threads.nthreads())
 
-# plot_multiple_calculations(params,"combined_plots.png")
+plot_multiple_calculations(params,"combined_plots.png")
 
 params = Dict( # ωcn  g1n  g2n g3n λ1n  λ2n  λcn  α1  α2  β
              "yig_t_0.000" => [5.09, .11, 0.0, .001, .01, .01, .07, 2e-2, 1e-5, 1e-5],  
@@ -350,7 +362,7 @@ params = Dict( # ωcn  g1n  g2n g3n λ1n  λ2n  λcn  α1  α2  β
             #  "yig_t_0.040" => [5.04, .155, 0.13, .001, .01, .01, .07, 2e-2, 1e-5, 1e-5], 
             #  "yig_t_0.053" => [5.01, .16, 0.15, .001, .01, .01, .07, 2e-2, 1e-5, 1e-5], 
             #  "yig_t_0.067" => [5.02, .18, 0.18, .001, .01, .01, .07, 2e-2, 1e-5, 1e-5],  
-             "yig_t_0.100_z" => [5.01, .2,  0.25, .001, .01, .01, .07, 2e-2, 1e-5, 1e-5], 
+             "yig_t_0.100_z" => [5.01, .2,  0.21, .001, .01, .01, .07, 2e-2, 1e-5, 1e-5], 
              )
 
 println("Threads allocated: ", Threads.nthreads())

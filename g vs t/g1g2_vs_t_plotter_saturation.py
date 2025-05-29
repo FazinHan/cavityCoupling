@@ -1,4 +1,4 @@
-import sys
+import sys, os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -90,4 +90,4 @@ plt.tick_params(axis='both', which='minor', labelsize=8, direction='in')
 # plt.legend(fontsize=15)
 # plt.grid()
 # plt.show()
-plt.savefig('tentative\\images\\g1g2_vs_t.png', dpi=300, bbox_inches='tight')
+plt.savefig(os.path.join("tentative","images",'g1g2_vs_t.png'), dpi=300, bbox_inches='tight')

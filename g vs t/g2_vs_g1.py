@@ -1,4 +1,4 @@
-import sys
+import sys, os
 import numpy as np
 import pandas as pd
 from scipy.stats import linregress
@@ -40,7 +40,7 @@ plt.tick_params(axis='both', which='minor', labelsize=8, direction='in')
 # plt.legend(fontsize=12)
 # plt.legend(fontsize=15)
 plt.tight_layout()
-plt.savefig("tentative\\images\\g2_vs_g1.png",dpi=300,bbox_inches='tight')
+plt.savefig(os.path.join("tentative","images","g2_vs_g1.png"),dpi=300,bbox_inches='tight')
 plt.close()
 
 # exit()
