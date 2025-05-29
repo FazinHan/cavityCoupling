@@ -1,6 +1,5 @@
 # using QuantumCumulants
 # using OrdinaryDiffEq, ModelingToolkit
-ENV["PYTHON"] = "/home/fazinhan/miniconda3/envs/cavityCoupling/bin/python"
 ENV["MPLBACKEND"] = "qt5agg"
 using QuantumCumulants
 using OrdinaryDiffEq, ModelingToolkit
