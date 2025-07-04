@@ -25,6 +25,17 @@ def s21_theoretical(
     lambda_r=default_values['lambda_r'],
     beta=default_values['beta']
 ):
+    
+    matrices = []
+
+    for i in range(3):
+        for j in range(3):
+            mat = np.zeros((3, 3), dtype=int)
+            mat[i, j] = 1
+            matrices.append(mat)
+    
+    ww, hh = np.meshgrid(w,H)
+
     # Constants
     gyro1 = 2.94e-3
     gyro2 = 1.76e-2 / (2 * np.pi)
@@ -37,20 +48,36 @@ def s21_theoretical(
 
     alpha_r = beta
 
-    omega_1 = gyro1 * np.sqrt(H * (H + M1))
-    omega_2 = gyro2 * np.sqrt(H * (H + M2))
+    omega_1 = gyro1 * np.sqrt(hh * (hh + M1))
+    omega_2 = gyro2 * np.sqrt(hh * (hh + M2))
     omega_r = 5.0 # Assuming this was a constant, in Julia it's 5
 
     tomega_1 = omega_1 - 1j * (alpha_1 + gamma_1)
     tomega_2 = omega_2 - 1j * (alpha_2 + gamma_2)
     tomega_r = omega_r - 1j * (alpha_r + gamma_r)
 
+    Aa = np.kron(ww - tomega_1,matrices[0])
+    Bb = np.kron(-g1 + 1j * np.sqrt(gamma_1 * gamma_r)*np.ones_like(ww), matrices[1])
+    Cc = np.kron(-g3 + 1j * np.sqrt(gamma_1 * gamma_2)*np.ones_like(ww), matrices[2])
+    Dd = np.kron(-g1 + 1j * np.sqrt(gamma_1 * gamma_r)*np.ones_like(ww), matrices[3])
+    Ee = np.kron(ww - tomega_r, matrices[4])
+    Ff = np.kron(-g2 + 1j * np.sqrt(gamma_2 * gamma_r)*np.ones_like(ww), matrices[5])
+    Gg = np.kron(-g3 + 1j * np.sqrt(gamma_1 * gamma_2)*np.ones_like(ww), matrices[6])
+    Hh = np.kron(-g2 + 1j * np.sqrt(gamma_2 * gamma_r)*np.ones_like(ww), matrices[7])
+    Ii = np.kron(ww - tomega_2, matrices[8])
+
     # Construct the matrix M
-    M = np.array([
-        [w - tomega_1,                             -g1 + 1j * np.sqrt(gamma_1 * gamma_r), -g3 + 1j * np.sqrt(gamma_1 * gamma_2)],
-        [-g1 + 1j * np.sqrt(gamma_1 * gamma_r),    w - tomega_r,                          -g2 + 1j * np.sqrt(gamma_2 * gamma_r)],
-        [-g3 + 1j * np.sqrt(gamma_1 * gamma_2),    -g2 + 1j * np.sqrt(gamma_2 * gamma_r),   w - tomega_2]
-    ], dtype=complex)
+    # M = np.array([
+    #     [ww - tomega_1,                             -g1 + 1j * np.sqrt(gamma_1 * gamma_r), -g3 + 1j * np.sqrt(gamma_1 * gamma_2)],
+    #     [-g1 + 1j * np.sqrt(gamma_1 * gamma_r),    ww - tomega_r,                          -g2 + 1j * np.sqrt(gamma_2 * gamma_r)],
+    #     [-g3 + 1j * np.sqrt(gamma_1 * gamma_2),    -g2 + 1j * np.sqrt(gamma_2 * gamma_r),   ww - tomega_2]
+    # ], dtype=complex)
+
+    M = np.block([[Aa, Bb, Cc],
+                  [Dd, Ee, Ff],
+                  [Gg, Hh, Ii]])
+
+    print(M.shape)
 
     B = np.array([np.sqrt(gamma_1), np.sqrt(gamma_r), np.sqrt(gamma_2)], dtype=complex)
     B_col = B[:, np.newaxis] 
@@ -72,9 +99,11 @@ H = np.linspace(0, 1600, 100)  # Example magnetic field range
 
 s21 = np.zeros((omega.size, H.size))
 
-for i, w in enumerate(omega):
-    for j, h in enumerate(H):
-        s21[i,j] = s21_theoretical(w,h)
+# for i, w in enumerate(omega):
+#     for j, h in enumerate(H):
+#         s21[i,j] = s21_theoretical(w,h)
+
+s21 = s21_theoretical(omega, H)
 
 plt.pcolormesh(H, omega, s21)
 plt.show()
