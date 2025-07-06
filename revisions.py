@@ -1,5 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import os, time
+
+os.makedirs(os.path.join('new','figures'),exist_ok=True)
+os.makedirs(os.path.join('new','data'), exist_ok=True)
+
+
+grid_resolution = 1000
+sweep_resolution = 100
 
 default_values = {
     'g1': 0.2,
@@ -34,8 +42,6 @@ def s21_theoretical(
             mat[i, j] = 1
             matrices.append(mat)
     
-    ww, hh = np.meshgrid(w,H)
-
     # Constants
     gyro1 = 2.94e-3
     gyro2 = 1.76e-2 / (2 * np.pi)
@@ -48,39 +54,22 @@ def s21_theoretical(
 
     alpha_r = beta
 
-    omega_1 = gyro1 * np.sqrt(hh * (hh + M1))
-    omega_2 = gyro2 * np.sqrt(hh * (hh + M2))
+    omega_1 = gyro1 * np.sqrt(H * (H + M1))
+    omega_2 = gyro2 * np.sqrt(H * (H + M2))
     omega_r = 5.0 # Assuming this was a constant, in Julia it's 5
 
     tomega_1 = omega_1 - 1j * (alpha_1 + gamma_1)
     tomega_2 = omega_2 - 1j * (alpha_2 + gamma_2)
     tomega_r = omega_r - 1j * (alpha_r + gamma_r)
 
-    Aa = np.kron(ww - tomega_1,matrices[0])
-    Bb = np.kron(-g1 + 1j * np.sqrt(gamma_1 * gamma_r)*np.ones_like(ww), matrices[1])
-    Cc = np.kron(-g3 + 1j * np.sqrt(gamma_1 * gamma_2)*np.ones_like(ww), matrices[2])
-    Dd = np.kron(-g1 + 1j * np.sqrt(gamma_1 * gamma_r)*np.ones_like(ww), matrices[3])
-    Ee = np.kron(ww - tomega_r, matrices[4])
-    Ff = np.kron(-g2 + 1j * np.sqrt(gamma_2 * gamma_r)*np.ones_like(ww), matrices[5])
-    Gg = np.kron(-g3 + 1j * np.sqrt(gamma_1 * gamma_2)*np.ones_like(ww), matrices[6])
-    Hh = np.kron(-g2 + 1j * np.sqrt(gamma_2 * gamma_r)*np.ones_like(ww), matrices[7])
-    Ii = np.kron(ww - tomega_2, matrices[8])
-
     # Construct the matrix M
-    # M = np.array([
-    #     [ww - tomega_1,                             -g1 + 1j * np.sqrt(gamma_1 * gamma_r), -g3 + 1j * np.sqrt(gamma_1 * gamma_2)],
-    #     [-g1 + 1j * np.sqrt(gamma_1 * gamma_r),    ww - tomega_r,                          -g2 + 1j * np.sqrt(gamma_2 * gamma_r)],
-    #     [-g3 + 1j * np.sqrt(gamma_1 * gamma_2),    -g2 + 1j * np.sqrt(gamma_2 * gamma_r),   ww - tomega_2]
-    # ], dtype=complex)
-
-    M = np.block([[Aa, Bb, Cc],
-                  [Dd, Ee, Ff],
-                  [Gg, Hh, Ii]])
-
-    print(M.shape)
+    M = np.array([
+        [w - tomega_1,                             -g1 + 1j * np.sqrt(gamma_1 * gamma_r), -g3 + 1j * np.sqrt(gamma_1 * gamma_2)],
+        [-g1 + 1j * np.sqrt(gamma_1 * gamma_r),    w - tomega_r,                          -g2 + 1j * np.sqrt(gamma_2 * gamma_r)],
+        [-g3 + 1j * np.sqrt(gamma_1 * gamma_2),    -g2 + 1j * np.sqrt(gamma_2 * gamma_r),   w - tomega_2]
+    ], dtype=complex)
 
     B = np.array([np.sqrt(gamma_1), np.sqrt(gamma_r), np.sqrt(gamma_2)], dtype=complex)
-    B_col = B[:, np.newaxis] 
 
     try:
         inv_M = np.linalg.inv(M)
@@ -92,18 +81,141 @@ def s21_theoretical(
 
     return np.abs(result)
 
+def coupling(plot=True,**parameters):
+    
+    def analyze_array(arr, slope, name):
+        # Length
+        length = len(arr)
+        # Number of zeros at the end
+        num_zeros_end = 0
+        for val in arr[::-1]:
+            if val == 0:
+                num_zeros_end += 1
+            else:
+                break
+        # Largest two elements
+        if np.count_nonzero(arr) >= 2:
+            largest_indices = np.argpartition(arr, -2)[-2:]
+            largest_values = arr[largest_indices]
+            largest_values = np.sort(largest_values)[::-1]
+        else:
+            largest_values = arr[np.nonzero(arr)]
+        # print(f"{name}:")
+        # print(f"  Length: {length}")
+        # print(f"  Number of zeros at the end: {num_zeros_end}")
+        # print(f"  Largest two elements: {largest_values}")
+        # print(f"  Difference between largest two elements: {np.diff(largest_values).__abs__()}")
+        coupling = np.diff(omega[largest_indices]).__abs__()[0]/np.sin(-np.arctan(slope))
+        # print(f"  Coupling gap: {coupling:.5f}\n")
 
-omega = np.linspace(4.3,6.1, 1000)  # Example frequency range
-# omega = np.linspace(0,10, 1000)  # Example frequency range
-H = np.linspace(0, 1600, 100)  # Example magnetic field range
+        return coupling, largest_indices
 
-s21 = np.zeros((omega.size, H.size))
+    omega = np.linspace(4.3,6.1, grid_resolution)  # Example frequency range
+    # omega = np.linspace(0,10, grid_resolution)  # Example frequency range
+    H = np.linspace(0, 1600, grid_resolution)  # Example magnetic field range
 
-# for i, w in enumerate(omega):
-#     for j, h in enumerate(H):
-#         s21[i,j] = s21_theoretical(w,h)
+    s21 = np.zeros((omega.size, H.size))
 
-s21 = s21_theoretical(omega, H)
+    for i, w in enumerate(omega):
+        for j, h in enumerate(H):
+            s21[i,j] = s21_theoretical(w,h,**parameters)
 
-plt.pcolormesh(H, omega, s21)
-plt.show()
+    line_a = [(238,5.063),(290,4.917)]
+    line_b = [(1093,5.076),(1137,4.931)]
+
+    slope_a, intercept_a = np.polyfit(*zip(*line_a), 1)
+    slope_b, intercept_b = np.polyfit(*zip(*line_b), 1)
+
+    lina = lambda x: slope_a * x + intercept_a
+    linb = lambda x: slope_b * x + intercept_b
+
+    s21_a = np.zeros_like(lina(H))
+    s21_b = np.zeros_like(linb(H))
+    idx=0
+    for hdx, h in enumerate(H):
+        if lina(h) > omega.min() and lina(h) < omega.max():
+            atol = .5*np.min(np.diff(omega))
+            closeness_array = np.isclose(omega, lina(h), atol=atol)
+            z=np.count_nonzero(closeness_array)
+            if z == 2:
+                true_indices = np.where(closeness_array)[0]
+                idx_to_switch = np.random.choice(true_indices)
+                closeness_array[idx_to_switch] = False
+            s21_a[idx] = s21[np.where(closeness_array),hdx]
+            idx+=1
+    idx=0
+    for hdx, h in enumerate(H):
+        if linb(h) > omega.min() and linb(h) < omega.max():
+            atol = .5 * np.min(np.diff(omega))
+            closeness_array = np.isclose(omega, linb(h), atol=atol)
+            z = np.count_nonzero(closeness_array)
+            if z == 2:
+                true_indices = np.where(closeness_array)[0]
+                idx_to_switch = np.random.choice(true_indices)
+                closeness_array[idx_to_switch] = False
+            s21_b[idx] = s21[np.where(closeness_array), hdx]
+            idx+=1
+
+    
+    c1, largest_indices_a = analyze_array(s21_a, slope_a, "s21_a")
+    c2, largest_indices_b = analyze_array(s21_b, slope_b, "s21_b")
+
+    if plot:
+        plt.pcolormesh(H,omega,s21)
+        plt.plot(H, lina(H), 'r--', label=f'coupling = {c1:.5f}')
+        plt.plot(H, linb(H), 'g--', label=f'coupling = {c2:.5f}')
+        plt.plot(H[largest_indices_a], s21_a[largest_indices_a], 'ko', markersize=5)
+        plt.xlabel("H (kOe)")
+        plt.ylabel("$\\omega$")
+        plt.ylim(omega.min(), omega.max())
+        plt.legend()
+        plt.title(parameters)
+        plt.tight_layout()
+        plt.colorbar(label='$|S_{21}|$')
+        plt.show()
+
+    return c1, c2
+
+if __name__ == "__main__":
+    # coupling(g1=.1)
+
+    sweep_array = np.linspace(0,1, sweep_resolution)
+
+    params = default_values.keys()
+
+    total_time = 0
+    counter = 0
+    total_count = len(params) * (len(params) - 1)
+
+    for param1 in params:
+        for param2 in params:
+            if param1 != param2:
+                t0 = time.time()
+                print(f"Analyzing {param1} and {param2}")
+                c1_array = np.zeros((sweep_resolution, sweep_resolution))
+                c2_array = np.zeros((sweep_resolution, sweep_resolution))
+                for idx,value1 in enumerate(sweep_array):
+                    for jdx,value2 in enumerate(sweep_array):
+                        parameters = default_values.copy()
+                        parameters[param1] = value1
+                        parameters[param2] = value2
+                        c1_array[idx,jdx], c2_array[idx,jdx] = coupling(plot=False, **parameters)
+                print(f"Finished analyzing {param1} and {param2}\n")
+                plt.pcolormesh(sweep_array, sweep_array, c1_array, shading='auto')
+                plt.colorbar(label=f'coupling strength')
+                plt.xlabel(param1)
+                plt.ylabel(param2)
+                plt.title(f'Coupling {param1} vs {param2}')
+                plt.tight_layout()
+                plt.savefig(os.path.join('new','figures',f'coupling_{param1}_vs_{param2}.png'))
+                print(f"Saved figure for {param1} vs {param2}")
+                plt.close()
+                file = os.path.join('new','data',f'coupling_{param1}_vs_{param2}.npz')
+                np.savez(file, {'c1': c1_array, 'c2': c2_array, 'sweep_array': sweep_array})
+                print(f"Saved data for {param1} vs {param2} to {file}")
+                t1 = time.time()
+                print(f"Time taken for {param1} and {param2}: {t1 - t0:.2f} seconds\n")
+                counter += 1
+                total_time += (t1 - t0)
+                print("Estimated time remaining: {:.2f} seconds".format((total_count - counter) * (total_time / counter)))
+    print("All analyses completed.")
