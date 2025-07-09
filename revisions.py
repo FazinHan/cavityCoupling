@@ -2,11 +2,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os, time
 
+parallel = False
+
 os.makedirs(os.path.join('new','figures'),exist_ok=True)
 os.makedirs(os.path.join('new','data'), exist_ok=True)
 
-
-grid_resolution = 1000
+grid_resolution = 100
 sweep_resolution = 100
 
 default_values = {
@@ -187,35 +188,126 @@ if __name__ == "__main__":
     counter = 0
     total_count = len(params) * (len(params) - 1)
 
-    for param1 in params:
-        for param2 in params:
-            if param1 != param2:
-                t0 = time.time()
-                print(f"Analyzing {param1} and {param2}")
-                c1_array = np.zeros((sweep_resolution, sweep_resolution))
-                c2_array = np.zeros((sweep_resolution, sweep_resolution))
-                for idx,value1 in enumerate(sweep_array):
-                    for jdx,value2 in enumerate(sweep_array):
-                        parameters = default_values.copy()
-                        parameters[param1] = value1
-                        parameters[param2] = value2
-                        c1_array[idx,jdx], c2_array[idx,jdx] = coupling(plot=False, **parameters)
-                print(f"Finished analyzing {param1} and {param2}\n")
-                plt.pcolormesh(sweep_array, sweep_array, c1_array, shading='auto')
-                plt.colorbar(label=f'coupling strength')
-                plt.xlabel(param1)
-                plt.ylabel(param2)
-                plt.title(f'Coupling {param1} vs {param2}')
-                plt.tight_layout()
-                plt.savefig(os.path.join('new','figures',f'coupling_{param1}_vs_{param2}.png'))
-                print(f"Saved figure for {param1} vs {param2}")
-                plt.close()
-                file = os.path.join('new','data',f'coupling_{param1}_vs_{param2}.npz')
-                np.savez(file, {'c1': c1_array, 'c2': c2_array, 'sweep_array': sweep_array})
-                print(f"Saved data for {param1} vs {param2} to {file}")
-                t1 = time.time()
-                print(f"Time taken for {param1} and {param2}: {t1 - t0:.2f} seconds\n")
-                counter += 1
-                total_time += (t1 - t0)
-                print("Estimated time remaining: {:.2f} seconds".format((total_count - counter) * (total_time / counter)))
+    # if not parallel:
+    #     print("Running sequentially...")
+    #     for param1 in params:
+    #         for param2 in params:
+    #             if param1 != param2:
+    #                 t0 = time.time()
+    #                 print(f"Analyzing {param1} and {param2}")
+    #                 c1_array = np.zeros((sweep_resolution, sweep_resolution))
+    #                 c2_array = np.zeros((sweep_resolution, sweep_resolution))
+    #                 for idx,value1 in enumerate(sweep_array):
+    #                     for jdx,value2 in enumerate(sweep_array):
+    #                         parameters = default_values.copy()
+    #                         parameters[param1] = value1
+    #                         parameters[param2] = value2
+    #                         c1_array[idx,jdx], c2_array[idx,jdx] = coupling(plot=False, **parameters)
+    #                 print(f"Finished analyzing {param1} and {param2}\n")
+    #                 plt.pcolormesh(sweep_array, sweep_array, c1_array, shading='auto')
+    #                 plt.colorbar(label=f'coupling strength')
+    #                 plt.xlabel(param1)
+    #                 plt.ylabel(param2)
+    #                 plt.title(f'Coupling {param1} vs {param2}')
+    #                 plt.tight_layout()
+    #                 plt.savefig(os.path.join('new','figures',f'coupling_{param1}_vs_{param2}.png'))
+    #                 print(f"Saved figure for {param1} vs {param2}")
+    #                 plt.close()
+    #                 file = os.path.join('new','data',f'coupling_{param1}_vs_{param2}.npz')
+    #                 np.savez(file, {'c1': c1_array, 'c2': c2_array, 'sweep_array': sweep_array})
+    #                 print(f"Saved data for {param1} vs {param2} to {file}")
+    #                 t1 = time.time()
+    #                 print(f"Time taken for {param1} and {param2}: {t1 - t0:.2f} seconds\n")
+    #                 counter += 1
+    #                 total_time += (t1 - t0)
+    #                 print("Estimated time remaining: {:.2f} seconds".format((total_count - counter) * (total_time / counter)))
+    # else: # written by copilot, dunno if it works
+    #     print("Running in parallel mode...")
+    #     from mpi4py import MPI
+    #     comm = MPI.COMM_WORLD
+    #     rank = comm.Get_rank()
+    #     size = comm.Get_size()
+    #     indices = np.arange(len(params),dtype=int)
+    #     param_pairs = [(params[i], params[j]) for i in indices for j in indices if i != j]
+    #     total_count = len(param_pairs)
+    #     local_pairs = np.array_split(param_pairs, size)[rank]
+    #     local_results = []
+    #     for param1, param2 in local_pairs:
+    #         t0 = time.time()
+    #         print(f"Rank {rank} analyzing {param1} and {param2}")
+    #         c1_array = np.zeros((sweep_resolution, sweep_resolution))
+    #         c2_array = np.zeros((sweep_resolution, sweep_resolution))
+    #         for idx, value1 in enumerate(sweep_array):
+    #             for jdx, value2 in enumerate(sweep_array):
+    #                 parameters = default_values.copy()
+    #                 parameters[param1] = value1
+    #                 parameters[param2] = value2
+    #                 c1_array[idx, jdx], c2_array[idx, jdx] = coupling(plot=False, **parameters)
+    #         print(f"Rank {rank} finished analyzing {param1} and {param2}\n")
+    #         plt.pcolormesh(sweep_array, sweep_array, c1_array, shading='auto')
+    #         plt.colorbar(label=f'coupling strength')
+    #         plt.xlabel(param1)
+    #         plt.ylabel(param2)
+    #         plt.title(f'Coupling {param1} vs {param2}')
+    #         plt.tight_layout()
+    #         plt.savefig(os.path.join('new', 'figures', f'coupling_{param1}_vs_{param2}_rank{rank}.png'))
+    #         print(f"Rank {rank} saved figure for {param1} vs {param2}")
+    #         plt.close()
+    #         file = os.path.join('new', 'data', f'coupling_{param1}_vs_{param2}_rank{rank}.npz')
+    #         np.savez(file, {'c1': c1_array, 'c2': c2_array, 'sweep_array': sweep_array})
+    #         print(f"Rank {rank} saved data for {param1} vs {param2} to {file}")
+    #         t1 = time.time()
+    #         # print(f"Rank {rank} time taken for {param1} and {param2}: {t1 - t0:.2f} seconds\n")
+    #         local_results.append((param1, param2, c1_array, c2_array))
+    #         # print(f"Rank {rank} estimated time remaining: {((total_count - len(local_pairs)) * (t1 - t0)) / size:.2f} seconds")
+    #     # Gather results from all ranks
+    #     all_results = comm.gather(local_results, root=0)
+    #     if rank == 0:
+    #         for result in all_results:
+    #             for param1, param2, c1_array, c2_array in result:
+    #                 print(f"Rank {rank} processed {param1} and {param2}")
+    #                 plt.pcolormesh(sweep_array, sweep_array, c1_array, shading='auto')
+    #                 plt.colorbar(label=f'coupling strength')
+    #                 plt.xlabel(param1)
+    #                 plt.ylabel(param2)
+    #                 plt.title(f'Coupling {param1} vs {param2}')
+    #                 plt.tight_layout()
+    #                 plt.savefig(os.path.join('new', 'figures', f'coupling_{param1}_vs_{param2}.png'))
+    #                 print(f"Saved figure for {param1} vs {param2}")
+    #                 plt.close()
+    #                 file = os.path.join('new', 'data', f'coupling_{param1}_vs_{param2}.npz')
+    #                 np.savez(file, {'c1': c1_array, 'c2': c2_array, 'sweep_array': sweep_array})
+    #                 print(f"Saved data for {param1} vs {param2} to {file}")
+
+    for param in params:
+        t0 = time.time()
+        print(f"Analyzing {param} sweep")
+        c1_array = np.zeros(sweep_resolution)
+        c2_array = np.zeros(sweep_resolution)
+        for idx, value1 in enumerate(sweep_array):
+            parameters = default_values.copy()
+            parameters[param] = value1
+            c1_array[idx], c2_array[idx] = coupling(plot=False, **parameters)
+        print(f"Finished analyzing {param} sweep\n")
+        # plt.pcolormesh(sweep_array, sweep_array, c1_array, shading='auto')
+        # plt.colorbar(label=f'coupling strength')
+        plt.plot(sweep_array, c1_array, label='c1')
+        plt.plot(sweep_array, c2_array, label='c2')
+        plt.legend()
+        plt.xlabel(param)
+        plt.ylabel('Coupling strength')
+        plt.title(f'Coupling strength vs {param}')
+        plt.tight_layout()
+        plt.savefig(os.path.join('new', 'figures', f'coupling_vs_{param}.png'))
+        print(f"Saved figure for {param}")
+        plt.close()
+        file = os.path.join('new', 'data', f'coupling_vs_{param}.npz')
+        np.savez(file, {'c1': c1_array, 'c2': c2_array, 'sweep_array': sweep_array})
+        print(f"Saved data for {param} to {file}")
+        t1 = time.time()
+        total_time += (t1 - t0)
+        counter += 1
+        print(f"Time taken for {param} sweep: {t1 - t0:.2f} seconds\n")
+
     print("All analyses completed.")
+    print(f"Total time taken: {total_time:.2f} seconds")
