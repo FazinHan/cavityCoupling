@@ -7,7 +7,7 @@ parallel = False
 os.makedirs(os.path.join('new','figures'),exist_ok=True)
 os.makedirs(os.path.join('new','data'), exist_ok=True)
 
-grid_resolution = 100
+grid_resolution = 200
 sweep_resolution = 100
 
 default_values = {

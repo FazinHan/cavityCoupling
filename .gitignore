@@ -24,6 +24,10 @@ tentative/
 # C extensions
 *.so
 
+# temporary data exclusion
+*.csv
+*.zip
+
 # Distribution / packaging
 .Python
 build/
