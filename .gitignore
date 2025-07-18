@@ -27,6 +27,7 @@ tentative/
 # temporary data exclusion
 *.csv
 *.zip
+*.mat
 
 # Distribution / packaging
 .Python
