@@ -28,6 +28,7 @@ tentative/
 *.csv
 *.zip
 *.mat
+*.npz
 
 # Distribution / packaging
 .Python
