@@ -180,7 +180,7 @@ def coupling(plot=True,**parameters):
 if __name__ == "__main__":
     # coupling(g1=.1)
 
-    sweep_array = np.linspace(0,1, sweep_resolution)
+    sweep_array = np.linspace(0,1e-2, sweep_resolution)
 
     params = default_values.keys()
 
