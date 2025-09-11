@@ -1,0 +1,54 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[top=1in, bottom=1in, left=1in, right=1in]{geometry}
+\usepackage{times}
+\usepackage{graphicx}
+\usepackage{caption}
+\captionsetup[figure]{font=small,labelfont=it,labelsep=period,justification=centering}
+
+\renewcommand{\baselinestretch}{1}  % Line spacing 1
+
+\begin{document}
+
+% Title
+\begin{center}
+    {\fontsize{14}{16}\selectfont \textbf{Title of Abstract}}\\[10pt]
+    
+    {\fontsize{10}{12}\selectfont Firstname Lastname$^{1}$, Firstname Lastname$^{2}$}\\[5pt]
+    
+    {\fontsize{10}{12}\selectfont $^{1}$Affiliation of First Author, City, Country\\
+    $^{2}$Affiliation of Second Author, City, Country}\\[5pt]
+    
+    {\fontsize{10}{12}\selectfont \textit{*Corresponding author email: author@email.com}}\\[15pt]
+\end{center}
+
+% Abstract
+\noindent
+\textbf{Abstract}\\
+\noindent
+The main text of the abstract goes here. Write your abstract in Times New Roman, fontsize 12, line spacing 1. The abstract should be contained within one page, with no changes to margins or page setup. Ensure clarity and conciseness of your abstract text.
+
+\vspace{10pt}
+
+% Figure example (optional)
+\begin{center}
+    \includegraphics[width=0.5\linewidth]{logo.jpg}  % Replace with your figure
+    \captionof{figure}{\textit{Figure caption in Times New Roman, font size 10, centered and italic.}}
+\end{center}
+
+\vspace{10pt}
+
+% Keywords
+\noindent
+\textbf{Keywords:} Keyword1; Keyword2; Keyword3; Keyword4; Keyword5
+
+\vspace{15pt}
+
+% References
+\noindent
+\textbf{References}
+\begin{enumerate}
+    \item {\fontsize{10}{12}\selectfont Surname, A. B., \& Surname, B. B. (Year). Title of article. \textit{Title of Journal}, \textit{volume}(issue), page range.}
+    \item {\fontsize{10}{12}\selectfont Surname, C. D. (Year). Title of Book. Publisher.}
+\end{enumerate}
+
+\end{document}

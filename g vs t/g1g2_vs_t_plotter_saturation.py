@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from sklearn.linear_model import LinearRegression
 
-fontsize = int(sys.argv[1])
-labelsize = fontsize + int(sys.argv[2])
+fontsize = 25#int(sys.argv[1])
+labelsize = 33#fontsize + int(sys.argv[2])
 
 # Load data from CSV file
 filename = 'combined_plots_params.csv'
@@ -17,12 +17,21 @@ t = data['t'].values
 g1 = data['g1'].values
 g2 = data['g2'].values
 g3 = data['g3'].values
+g1_min = data['g1_min'].values
+g1_max = data['g1_max'].values
+g2_min = data['g2_min'].values
+g2_max = data['g2_max'].values
+
+g1_errors = g1_max - g1_min
+g2_errors = g2_max - g2_min
 
 if t[0]== 0:
     t = t[1:]
     g1 = g1[1:]
     g2 = g2[1:]
     g3 = g3[1:]
+    g1_errors = g1_errors[1:]
+    g2_errors = g2_errors[1:]
 
 
 
@@ -52,25 +61,14 @@ r2_g3 = g3_model.score(t.reshape(-1, 1), g3)
 
 # g1 data and fit
 plt.plot(t, g1, 'ro', label='$g_{Py}$ data',markersize=15)
+plt.errorbar(t, g1, yerr=g1_errors, fmt='none',ecolor='r',capsize=10)#, markersize=15, capsize=5)
 plt.plot(t, g1_fit_vals, 'r-', label=f'$g_{{\\text{{Py}}}} = {g1_model.coef_[0]:.2f}t + {g1_model.intercept_:.2f}$')# (R^2 = {r2_g1:.2f})$')
 # Print the slope and intercept of the fit for g1
 print(f"Slope (g1): {g1_model.coef_[0]:.2f}, Intercept (g1): {g1_model.intercept_:.2f}")
 
-# plt.xlabel('t',fontsize=16)
-# plt.ylabel('$g_{Py}$',fontsize=16)
-# plt.tick_params(axis='both', which='major', labelsize=15)
-# plt.tick_params(axis='both', which='minor', labelsize=8)
-# plt.title(f'Saturation Fits for g1 and g2 (R^2: g1 = {r2_g1:.2f}, g2 = {r2_g2:.2f})')
-# plt.legend(fontsize=15)
-# plt.grid()
-# plt.show()
-# plt.savefig('tentative\\images\\gpy_vs_t.png', dpi=300, bbox_inches='tight')
-# plt.close()
-
-# plt.figure(figsize=(9, 6))
-
 # g2 data and fit
 plt.plot(t, g2, 'bx', label='$g_{YIG}$ data (Py present)',markersize=15)
+plt.errorbar(t, g2, yerr=g2_errors, fmt='none',ecolor='b',capsize=10)#, markersize=15, capsize=5)
 plt.plot(t, g2_fit_vals, 'b-', label=f'$g_{{\\text{{YIG}}}} = {g2_model.coef_[0]:.2f}t + {g2_model.intercept_:.2f}$')# (R^2 = {r2_g2:.2f})$')
 # Print the slope and intercept of the fit for g2
 print(f"Slope (g2): {g2_model.coef_[0]:.2f}, Intercept (g2): {g2_model.intercept_:.2f}")

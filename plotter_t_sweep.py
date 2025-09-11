@@ -40,7 +40,7 @@ for file in csv_files:
     # plt.xlim(1000,1600)
     plt.grid(True, linestyle='--', alpha=0.5)
     plt.tight_layout()
-    directory = os.path.join("results","lone_t_sweep","normalised")
+    directory = os.path.join("tentative","images","lone_t_sweep","normalised")
     os.makedirs(directory, exist_ok=True)
     plt.savefig(os.path.join(directory,f"yig_t_sweep_{int(float(yig_t_value)*1e3)}um.png"))
     print(f"Plot saved for yig_t={yig_t_value}mm")

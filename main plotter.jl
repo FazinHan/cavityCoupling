@@ -8,7 +8,7 @@ using DelimitedFiles
 import LinearAlgebra as la
 using Statistics
 
-
+si = 79.57747/1e3
 
 multiplier = 1
 M_1 = 10900
@@ -201,10 +201,10 @@ function plot_multiple_calculations(params, save_file, plot_size=3, width_excess
     # Create a figure and a grid of subplots
     # fig, axes = subplots()
 
-    fig, axes = subplots(nrows, ncols, figsize=(plot_size*ncols+width_excess,plot_size*nrows), sharey=theo, sharex=true)
+    fig, axes = subplots(nrows, ncols, figsize=(plot_size*ncols+width_excess,plot_size*nrows), sharey=true, sharex=true)
     # idx = 6
 
-    conversion = 1e3
+    conversion = si
 
     images = []
     for (idx, file) in enumerate(files)
@@ -235,9 +235,13 @@ function plot_multiple_calculations(params, save_file, plot_size=3, width_excess
         Hlist, frequencies, s21, occupationList = main(file, param)
         # Hlist, frequencies, s21, occupationList, param = main(file, param)
 
+        if idx==2
+            frequencies = frequencies  # Convert to GHz
+        end
+
         Hlist_old = Hlist
 
-        Hlist = Hlist/conversion # Convert to kOe
+        Hlist = Hlist*conversion # Convert to kA/m
 
         ωcn, g1n,g2n,g3n,λ1n,λ2n,λcn,α1n,α2n,βn = param
 
@@ -263,8 +267,8 @@ function plot_multiple_calculations(params, save_file, plot_size=3, width_excess
         end
         
         if lone && idx == 3
-            ax.text(220/conversion, 5.0, "P1", color="white", fontsize=12, ha="left")
-            ax.text(1090/conversion, 4.96, "P2", color="white", fontsize=12, ha="left")
+            ax.text(220*conversion, 5.0, "P1", color="white", fontsize=12, ha="left")
+            ax.text(1090*conversion, 4.96, "P2", color="white", fontsize=12, ha="left")
         end
 
         t = round(parse(Float64, split(file, "_")[3]), digits=3)
@@ -283,7 +287,7 @@ function plot_multiple_calculations(params, save_file, plot_size=3, width_excess
             ax.plot(Hlist, occupationList[:,1], "w",alpha=.5)
             ax.plot(Hlist, occupationList[:,2], "w",alpha=.5)
             ax.plot(Hlist, occupationList[:,3], "w",alpha=.5)
-            ax.text(1150/conversion, 5.5, "t = $tt μm", color="white", fontsize=15, ha="right")
+            ax.text(1150*conversion, 5.5, "t = $tt μm", color="white", fontsize=15, ha="right")
         end
         param = round.(param, digits=2)
         
@@ -313,15 +317,15 @@ function plot_multiple_calculations(params, save_file, plot_size=3, width_excess
     end
 
     if lone
-        axes[1].text(120/conversion, 4.4, "(a)", color="white", fontsize=15, ha="center")
-        axes[2].text(120/conversion, 4.6, "(b)", color="white", fontsize=15, ha="center")
-        axes[3].text(120/conversion, 4.4, "(c)", color="white", fontsize=15, ha="center")
-        axes[1].text(550/conversion, 5.5, "Py", color="white", fontsize=15, ha="center")
-        axes[2].text(1050/conversion, 5.7, "YIG", color="white", fontsize=15, ha="center")
-        axes[3].text(800/conversion, 5.5, "Py+YIG", color="white", fontsize=15, ha="center")
+        axes[1].text(120*conversion, 4.4, "(a)", color="white", fontsize=15, ha="center")
+        axes[2].text(120*conversion, 4.4, "(b)", color="white", fontsize=15, ha="center")
+        axes[3].text(120*conversion, 4.4, "(c)", color="white", fontsize=15, ha="center")
+        axes[1].text(550*conversion, 5.5, "Py", color="white", fontsize=15, ha="center")
+        axes[2].text(1050*conversion, 5.5, "YIG", color="white", fontsize=15, ha="center")
+        axes[3].text(800*conversion, 5.5, "Py+YIG", color="white", fontsize=15, ha="center")
     end
    
-    fig.supxlabel("       Magnetic Field (kOe)", fontsize=12)#,ha="right")
+    fig.supxlabel("       Magnetic Field (kA m\$^{-1}\$)", fontsize=12)#,ha="right")
     fig.supylabel("Frequency (GHz)", fontsize=12)
     tight_layout()
     
@@ -330,8 +334,8 @@ function plot_multiple_calculations(params, save_file, plot_size=3, width_excess
     end
 
     if lone
-        asp = 25
-        padding = .1
+        asp = 15
+        padding = 0.02
     else
         asp = 20
         padding = .02
@@ -358,7 +362,7 @@ params = Dict( # ωcn  g1n  g2n g3n λ1n  λ2n  λcn  α1  α2  β
              "yig_t_0.027" => [5.01, .14, 0.12, .001,5e-2,1e-5,.08, 2e-2, 1e-5, 1e-5],  
             #  "yig_t_0.040" => [5.04, .155, 0.13, .001,5e-2,1e-5,.08, 2e-2, 1e-5, 1e-5], 
              "yig_t_0.053" => [5.01, .16, 0.15, .001,5e-2,1e-5,.08, 2e-2, 1e-5, 1e-5], 
-            #  "yig_t_0.067" => [5.02, .18, 0.18, .001,5e-2,1e-5,.08, 2e-2, 1e-5, 1e-5],  
+            #  "yig_t_0.067" => [5.02, .18, 0.15, .001,5e-2,1e-5,.08, 2e-2, 1e-5, 1e-5],  
              "yig_t_0.100" => [5.01, .2,  0.25, .001,5e-2,1e-5,.08, 2e-2, 1e-5, 1e-5], 
              )
 
@@ -380,4 +384,4 @@ params = Dict( # ωcn  g1n  g2n g3n λ1n  λ2n  λcn  α1  α2  β
 
 println("Threads allocated: ", Threads.nthreads())
 
-plot_multiple_calculations(params,"combined_plots_isolate.png",3,1,true,3,false)
+# plot_multiple_calculations(params,"combined_plots_isolate.png",3,0,true,1,false)
