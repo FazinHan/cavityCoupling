@@ -338,3 +338,8 @@ if __name__ == "__main__":
     print("\nAll standard deviations:", stds)
     print()
     print("Mean standard deviation:", np.mean(stds))
+
+    combined_data = pd.read_csv(os.path.join('combined_plots_params.csv'), header=0)
+    combined_data = combined_data.assign(err=np.mean(stds))
+
+    combined_data.to_csv(os.path.join('combined_plots_params_erred.csv'), index=False)

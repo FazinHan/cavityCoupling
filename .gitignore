@@ -5,6 +5,7 @@ __pycache__/
 
 presentations/
 data/
+experimental\ data/
 simulations/
 .gitold/
 matrix\ method/1*
@@ -25,7 +26,7 @@ tentative/
 *.so
 
 # temporary data exclusion
-*.csv
+# *.csv
 *.zip
 *.mat
 *.npz
