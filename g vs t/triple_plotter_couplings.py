@@ -77,7 +77,7 @@ axs[0].errorbar(t, g1, yerr=err_arr, fmt='none',ecolor='r',capsize=10)#, markers
 print(f"Slope (g1): {g1_model.coef_[0]:.2f}, Intercept (g1): {g1_model.intercept_:.2f}")
 
 # g2 data and fit
-axs[0].plot(t, g2, 'bx', label='$g_{YIG}$ data (Py present)',markersize=15)
+axs[0].plot(t, g2, 'b^', label='$g_{YIG}$ data (Py present)',markersize=15)
 axs[0].plot(t, g2_fit_vals, 'b-', label=f'$g_{{\\text{{YIG}}}} = {g2_model.coef_[0]:.2f}t + {g2_model.intercept_:.2f}$')# (R^2 = {r2_g2:.2f})$')
 axs[0].errorbar(t, g2, yerr=err_arr, fmt='none',ecolor='b',capsize=10)#, markersize=15, capsize=5)
 # Print the slope and intercept of the fit for g2
@@ -131,7 +131,7 @@ slope, intercept, r_value, p_value, std_err = linregress(t_values, J_values[:len
 # Plot the fitted line
 t_fit = np.linspace(min(t_values), max(t_values), 100)
 J_fit = slope * t_fit + intercept
-axs[1].plot(t_values, J_values[:len(t_values)], 'bx', label='$g_{YIG}$ data (Py absent)',markersize=15)
+axs[1].plot(t_values, J_values[:len(t_values)], 'b^', label='$g_{YIG}$ data (Py absent)',markersize=15)
 axs[1].plot(t_fit, J_fit, 'b-', label=f'$g_{{YIG}} = {slope:.3f}t {'+'*(int(intercept>=0))} {intercept:.3f}$',markersize=15)
 axs[1].errorbar(t_values, J_values[:len(t_values)], yerr=err_arr, fmt='none',ecolor='b',capsize=10)#, markersize=15, capsize=5)
 axs[1].text(.02,.35,'(b)',fontsize=labelsize)
