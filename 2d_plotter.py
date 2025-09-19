@@ -3,11 +3,17 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import os
 
-directory = os.path.join(os.getcwd(),'data','yig_t_sweep_new')
 
-filename = 'yig_t_0.100_z.csv'
-reqd_H = 300 # Oe
-num_of_minima = 6
+filename = 'yig_t_0.100_lone.csv'
+save_dir = 'just yig'
+reqd_H = 1250 # Oe
+num_of_minima = 5
+
+
+directory = os.path.join(os.getcwd(),'data','yig_t_sweep_new')
+full_save_dir = os.path.join(os.getcwd(),'images','cst', save_dir)
+
+os.makedirs(full_save_dir, exist_ok=True)
 
 data = pd.read_csv(os.path.join(directory,filename),index_col=0,dtype=float)
 
@@ -47,4 +53,6 @@ plt.xlabel('$f$ (GHz)')
 plt.ylabel('$S_{21}$ (dB)')
 plt.legend()
 plt.tight_layout()
+plt.savefig(os.path.join(full_save_dir, f'{reqd_H}oe.png'), dpi=300)
 plt.show()
+plt.close()

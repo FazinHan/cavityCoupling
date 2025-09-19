@@ -8,8 +8,8 @@ using DelimitedFiles
 import LinearAlgebra as la
 using Statistics
 
-si = 79.57747/1e3
-# si = 1
+# si = 79.57747/1e3
+si = 1
 
 multiplier = 1
 M_1 = 10900
@@ -326,7 +326,8 @@ function plot_multiple_calculations(params, save_file, plot_size=3, width_excess
         axes[3].text(800*conversion, 5.5, "Py+YIG", color="white", fontsize=15, ha="center")
     end
    
-    fig.supxlabel("       Magnetic Field (kA m\$^{-1}\$)", fontsize=12)#,ha="right")
+    fig.supxlabel("       Magnetic Field (Oe)", fontsize=12)#,ha="right")
+    # fig.supxlabel("       Magnetic Field (kA m\$^{-1}\$)", fontsize=12)#,ha="right")
     fig.supylabel("Frequency (GHz)", fontsize=12)
     tight_layout()
     
@@ -369,7 +370,7 @@ params = Dict( # ωcn  g1n  g2n g3n λ1n  λ2n  λcn  α1  α2  β
 
 println("Threads allocated: ", Threads.nthreads())
 
-plot_multiple_calculations(params,"combined_plots.png",3,1)
+# plot_multiple_calculations(params,"combined_plots.png",3,1)
 
 params = Dict( # ωcn  g1n  g2n g3n λ1n  λ2n  λcn  α1  α2  β
              "yig_t_0.000" => [5.09, .11, 0.0, .001, .01, .01, .07, 2e-2, 1e-5, 1e-5],  
@@ -385,4 +386,4 @@ params = Dict( # ωcn  g1n  g2n g3n λ1n  λ2n  λcn  α1  α2  β
 
 println("Threads allocated: ", Threads.nthreads())
 
-# plot_multiple_calculations(params,"combined_plots_isolate.png",3,0,true,1,false)
+plot_multiple_calculations(params,"combined_plots_isolate.png",3,0,true,1,false)
